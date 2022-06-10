@@ -1,0 +1,7 @@
+{
+  "name": "max-stat-searcher-d2",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
