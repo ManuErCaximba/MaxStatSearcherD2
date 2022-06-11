@@ -9,12 +9,12 @@ import { BuildSearcherPageRoutingModule } from './build-searcher-routing.module'
 import { BuildSearcherPage } from './build-searcher.page';
 
 @NgModule({
-    imports: [
-        CommonModule,
-        FormsModule,
-        IonicModule,
-        BuildSearcherPageRoutingModule,
-    ],
-    declarations: [BuildSearcherPage],
+  imports: [
+    CommonModule,
+    FormsModule,
+    IonicModule,
+    BuildSearcherPageRoutingModule
+  ],
+  declarations: [BuildSearcherPage]
 })
 export class BuildSearcherPageModule {}
