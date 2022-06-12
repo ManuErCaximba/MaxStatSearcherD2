@@ -11,25 +11,59 @@ import { environment } from 'src/environments/environment';
 })
 export class RestService {
 
+  private authToken = this.localService.getData('mssd2-auth-token') 
+
   constructor(
     private httpClient: HttpClient,
     private localService: LocalStorageService,
     private router: Router
   ) {}
 
-  public getProfile(membershipType: string, membershipId: string) {
+  public async getItemManifestInfo() {
+    let manifest = await this.getManifest().toPromise();
+    console.log(manifest);
+    let urlAdd: string = manifest['Response'].jsonWorldComponentContentPaths.en['DestinyInventoryItemLiteDefinition'];
+    return await fetch('https://www.bungie.net/' + urlAdd).then(res => {
+      return res.json();
+    })
+  }
+
+  private getManifest() {
     const headers = new HttpHeaders()
+    .set('Authorization', 'Bearer ' + this.authToken)
     .set('X-API-key', environment.API_KEY);
     return this.httpClient
       .get(
-        'https://www.bungie.net/Platform/Destiny2/' + membershipType + '/Profile/' + membershipId + '/?components=100',
+        'https://www.bungie.net/Platform/Destiny2/manifest/',
         { headers: headers }
       )
   }
 
-  public getCurrentUser(authToken: string): Observable<any> {
+  public getItem(membershipType: string, membershipId: string, itemId: string) {
     const headers = new HttpHeaders()
-    .set('Authorization', 'Bearer ' + authToken)
+    .set('Authorization', 'Bearer ' + this.authToken)
+    .set('X-API-key', environment.API_KEY);
+    return this.httpClient
+      .get(
+        'https://www.bungie.net/Platform/Destiny2/' + membershipType + '/Profile/' + membershipId + '/Item/' + itemId + '/?components=300,302,304,305,307',
+        { headers: headers }
+      )
+  }
+
+  public getProfile(membershipType: string, membershipId: string) {
+    const headers = new HttpHeaders()
+    .set('Authorization', 'Bearer ' + this.authToken)
+    .set('X-API-key', environment.API_KEY);
+    return this.httpClient
+      .get(
+        'https://www.bungie.net/Platform/Destiny2/' + membershipType + '/Profile/' + membershipId + '/?components=100,201,205',
+        { headers: headers }
+      )
+  }
+
+  public getCurrentUser(): Observable<any> {
+    const headers = new HttpHeaders()
+    .set('Authorization', 'Bearer ' + this.authToken)
     .set('X-API-key', environment.API_KEY);
     return this.httpClient
       .get(
@@ -64,9 +98,9 @@ export class RestService {
   }
 
 
-  public getNicknameTest(authToken: string): Observable<any> {
+  public getNicknameTest(): Observable<any> {
     const authHeader = new HttpHeaders()
-      .set('Authorization', 'Bearer ' + authToken)
+      .set('Authorization', 'Bearer ' + this.authToken)
       .set('X-API-key', environment.API_KEY);
     return this.httpClient
       .get(
