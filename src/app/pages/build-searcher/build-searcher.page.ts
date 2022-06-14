@@ -3,6 +3,7 @@ import { LocalStorageService } from 'src/app/data-management/local-storage.servi
 import { RestService } from 'src/app/data-management/rest.service';
 
 import { ArmorDTO } from 'src/app/model/armorDTO';
+import { ArmorType } from 'src/app/model/enums';
 
 @Component({
   selector: 'app-build-searcher',
@@ -21,12 +22,8 @@ export class BuildSearcherPage implements OnInit {
     let membershipType = currentUser['Response'].destinyMemberships[0].membershipType;
     let membershipId = currentUser['Response'].destinyMemberships[0].membershipId;
 
-    this.restService.getProfile(membershipType, membershipId).subscribe((data) => {
-      console.log(data);
-    })
-
     let profile = await this.restService.getProfile(membershipType, membershipId).toPromise();
-    let characterIds = profile['Response'].profile.data['characterIds'];
+    let characterIds = profile['Response'].profile.data.characterIds;
     let items = [];
     for (let i = 0; i < 3; i++) {
       let temp = [];
@@ -34,7 +31,6 @@ export class BuildSearcherPage implements OnInit {
       temp = [...temp, ...profile['Response'].characterInventories.data[characterIds[i]].items];
       items.push(temp);
     }
-    console.log(items);
 
     let armors = [];
     items.forEach(charItems => {
@@ -48,8 +44,6 @@ export class BuildSearcherPage implements OnInit {
       armors.push(temp);
     })
 
-    console.log(armors);
-
     let armorsIds = [];
     armors.forEach(charItems => {
       let temp = []
@@ -59,32 +53,89 @@ export class BuildSearcherPage implements OnInit {
       armorsIds.push(temp);
     })
 
-    console.log(armorsIds);
-
-
-    // Extrayendo los perks de los items se puede ver si tiene mods como powerful friends que afecten a los stats
     let defItems = [];
     this.restService.getItemManifestInfo().then(json => {
       armorsIds.forEach(async charItems => {
         let temp = []
         charItems.forEach(async id => {
           let item = await this.restService.getItem(membershipType, membershipId, id).toPromise();
-          let itemData = item['Response'].item.data;
-          let nameIcon = itemData.overrideStyleItemHash === undefined ? json[itemData.itemHash].displayProperties :
-            [json[itemData.itemHash].displayProperties, json[itemData.overrideStyleItemHash].displayProperties];
-          let itemNameIcon = [item].concat(nameIcon);
-          temp.push(itemNameIcon);
-          //temp.push(new ArmorDTO(itemNameIcon));
+          let itemHash = item['Response'].item.data.itemHash;
+          let styleHash = item['Response'].item.data.overrideStyleItemHash;
+          let iconUrl = styleHash !== undefined ? json[styleHash.toString()].displayProperties.icon : json[itemHash.toString()].displayProperties.icon;
+          let name = json[itemHash].displayProperties.name;
+          let itemSockets = item['Response'].sockets.data.sockets.slice(6, 10);
+          let investmestStats = [];
+          for (let i = 0; i < itemSockets.length; i++) {
+            investmestStats.push(json[itemSockets[i].plugHash].investmentStats);
+          }
+          let baseStats = this.getStats(investmestStats);
+          let armorType = this.getArmorType(item['Response'].item.data.bucketHash);
+          let classType = json[itemHash.toString()].classType;
+          temp.push(new ArmorDTO(
+            id,
+            itemHash,
+            name,
+            iconUrl,
+            baseStats[0],
+            baseStats[1],
+            baseStats[2],
+            baseStats[3],
+            baseStats[4],
+            baseStats[5],
+            armorType,
+            classType
+          ));
         });
         defItems.push(temp)
       });
     });
-    console.log(defItems);
-
-
   }
-  //14239492 chest hash
-  //3448274439 helmet hash
-  //3551918588 gauntlets hash
-  //20886954 leg hash
+
+  private getStats(investmestStats: any[]) {
+    var mobility: number = 0;
+    var resilience: number = 0;
+    var recovery: number = 0;
+    var discipline: number = 0;
+    var intellect: number = 0;
+    var strength: number = 0;
+    for (let i = 0; i < investmestStats.length; i++) {
+      let iS = investmestStats[i];
+      for (let j = 0; j < 3; j++) {
+        switch (iS[j].statTypeHash) {
+          case (2996146975):
+            mobility += iS[j].value;
+            break;
+          case (392767087):
+            resilience += iS[j].value;
+            break;
+          case (1943323491):
+            recovery += iS[j].value;
+            break;
+          case (1735777505):
+            discipline += iS[j].value;
+            break;
+          case (144602215):
+            intellect += iS[j].value;
+            break;
+          case (4244567218):
+            strength += iS[j].value;
+            break;
+        }
+      }
+    }
+    return [mobility, resilience, recovery, discipline, intellect, strength];
+  }
+
+  private getArmorType(bucketHash: number) {
+    switch (bucketHash) {
+      case 3448274439:
+        return ArmorType.HELMET;
+      case 14239492:
+        return ArmorType.CHEST;
+      case 3551918588:
+        return ArmorType.GAUNTLETS;
+      case 20886954:
+        return ArmorType.LEGS;
+    }
+  }
 }

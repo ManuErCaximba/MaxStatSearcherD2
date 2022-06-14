@@ -21,8 +21,7 @@ export class RestService {
 
   public async getItemManifestInfo() {
     let manifest = await this.getManifest().toPromise();
-    console.log(manifest);
-    let urlAdd: string = manifest['Response'].jsonWorldComponentContentPaths.en['DestinyInventoryItemLiteDefinition'];
+    let urlAdd: string = manifest['Response'].jsonWorldComponentContentPaths.en['DestinyInventoryItemDefinition'];
     return await fetch('https://www.bungie.net/' + urlAdd).then(res => {
       return res.json();
     })

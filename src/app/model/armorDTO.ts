@@ -1,4 +1,4 @@
-import { ArmorType, ModType } from "./enums";
+import { ArmorType, ClassType, ModType } from "./enums";
 
 export class ArmorDTO {
 
@@ -16,23 +16,133 @@ export class ArmorDTO {
     public strength: number;
   
     public armorType: ArmorType;
+    public classType: ClassType;
+
+    constructor(
+        id: string,
+        hash: string,
+        name: string,
+        iconURL: string,
+        mobility: number,
+        resilience: number,
+        recovery: number,
+        discipline: number,
+        intellect: number,
+        strength: number,
+        armorType: ArmorType,
+        classType: ClassType
+    ) {
+        this.id = id;
+        this.hash = hash;
+        this.name = name;
+        this.iconURL = iconURL;
+        this.mobility = mobility;
+        this.resilience = resilience;
+        this.recovery = recovery;
+        this.discipline = discipline;
+        this.intellect = intellect;
+        this.strength = strength;
+        this.armorType = armorType;
+        this.classType = classType;
+    }
+
+    /*
+    public id: string;
+    public hash: string;
+  
+    public name: string;
+    public iconURL: string;
+  
+    public mobility: number;
+    public resilience: number;
+    public recovery: number;
+    public discipline: number;
+    public intellect: number;
+    public strength: number;
+  
+    public armorType: ArmorType;
+    public classType: ClassType;
     public modEquipped: ModType;
+    public classModEquipped: boolean = false;
     public masterwork: boolean;
   
-    constructor(itemNameIcon: any) {
-      this.id = itemNameIcon[0]['Response'].item.data['itemInstanceId'];
-      this.hash = itemNameIcon[0]['Response'].item.data['itemHash'];
-      this.name = itemNameIcon[1]['name'];
-      this.iconURL = itemNameIcon.length == 3 ? 'https://www.bungie.net' + itemNameIcon[2]['icon'] : 'https://www.bungie.net' + itemNameIcon[1]['icon'];
-      this.setModType(itemNameIcon[0]['Response'].sockets.data['sockets'][0]['plugHash']);
-      this.setArmorType(itemNameIcon[0]['Response'].item.data['bucketHash']);
-      this.masterwork = itemNameIcon[0]['Response'].instance.data['energy']['energyCapacity'] == 10 ? true : false;
-      this.setMobility(itemNameIcon[0]['Response'].stats.data['stats']['2996146975']);
-      this.setResilience(itemNameIcon[0]['Response'].stats.data['stats']['392767087']);
-      this.setRecovery(itemNameIcon[0]['Response'].stats.data['stats']['1943323491']);
-      this.setDiscipline(itemNameIcon[0]['Response'].stats.data['stats']['1735777505']);
-      this.setIntellect(itemNameIcon[0]['Response'].stats.data['stats']['144602215']);
-      this.setStrength(itemNameIcon[0]['Response'].stats.data['stats']['4244567218']);
+    constructor(itemNameIconClass: any) {
+        this.id = itemNameIconClass[0]['Response'].item.data['itemInstanceId'];
+        this.hash = itemNameIconClass[0]['Response'].item.data['itemHash'];
+        this.name = itemNameIconClass[1]['name'];
+        this.iconURL = itemNameIconClass.length == 4 ? 'https://www.bungie.net' + itemNameIconClass[2]['icon'] : 'https://www.bungie.net' + itemNameIconClass[1]['icon'];
+        this.setModType(itemNameIconClass[0]['Response'].sockets.data['sockets'][0]['plugHash']);
+        this.setArmorType(itemNameIconClass[0]['Response'].item.data['bucketHash']);
+        this.classType = itemNameIconClass[(itemNameIconClass.length - 1)];
+        this.masterwork = itemNameIconClass[0]['Response'].instance.data['energy']['energyCapacity'] == 10 ? true : false;
+        this.setMobility(itemNameIconClass[0]['Response'].stats.data['stats']['2996146975']);
+        this.setResilience(itemNameIconClass[0]['Response'].stats.data['stats']['392767087']);
+        this.setRecovery(itemNameIconClass[0]['Response'].stats.data['stats']['1943323491']);
+        this.setDiscipline(itemNameIconClass[0]['Response'].stats.data['stats']['1735777505']);
+        this.setIntellect(itemNameIconClass[0]['Response'].stats.data['stats']['144602215']);
+        this.setStrength(itemNameIconClass[0]['Response'].stats.data['stats']['4244567218']);
+        if (itemNameIconClass[0]['Response'].perks['data']) {
+            this.checkOtherMods(itemNameIconClass[0]['Response'].perks.data['perks']);
+        }
+    }
+
+    private checkOtherMods(perks: any) {
+        for (let i = 0; i < perks.length; i++) {
+            if (perks[i].isActive) {
+                switch (perks[i].perkHash) {
+                    case (2395177038):
+                        this.mobility -= 20;
+                        this.classModEquipped = true;
+                        break;
+                    case (1215135730):
+                        this.strength -= 20;
+                        this.classModEquipped = true;
+                        break;
+                    case (511479895):
+                        this.recovery += 10;
+                        this.classModEquipped = true;
+                        break;
+                    case (4087014105):
+                        this.recovery += 10;
+                        this.classModEquipped = true;
+                        break;
+                    case (2364771258):
+                        this.discipline += 10;
+                        this.classModEquipped = true;
+                        break;
+                    case (2951037852):
+                        this.discipline += 10;
+                        this.classModEquipped = true;
+                        break;
+                    case (530777110):
+                        this.intellect += 10;
+                        this.classModEquipped = true;
+                        break;
+                    case (1516012123):
+                        this.intellect += 10;
+                        this.classModEquipped = true;
+                        break;
+                    case (903373021):
+                        this.strength += 10;
+                        this.classModEquipped = true;
+                        break;
+                    case (3725596862):
+                        this.strength += 10;
+                        this.classModEquipped = true;
+                        break;
+                    case (139886105):
+                        this.mobility += 10;
+                        this.classModEquipped = true;
+                        break;
+                    case (2161694169):
+                        this.resilience += 10;
+                        this.mobility += 10;
+                        this.recovery += 10;
+                        this.classModEquipped = true;
+                        break;
+                }
+            }
+        }
     }
 
     private setMobility(data) {
@@ -173,5 +283,6 @@ export class ArmorDTO {
                 break;
         }
     }
+    */
 }
   

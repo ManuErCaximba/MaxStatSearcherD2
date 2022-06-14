@@ -21,4 +21,10 @@ export enum ModType {
     INTELLECT_10 = "INTELLECT_10",
     STRENGTH_10 = "STRENGTH_10"
 }
+
+export enum ClassType {
+    TITAN = 0,
+    HUNTER = 1,
+    WARLOCK = 2
+}
   
