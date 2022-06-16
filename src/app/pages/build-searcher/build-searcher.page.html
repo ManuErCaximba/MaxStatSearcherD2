@@ -5,7 +5,8 @@
 </ion-header>
 
 <ion-content>
-  <form [formGroup]="statForm" (ngSubmit)="onSubmit()">
+  <div class="container">
+<form [formGroup]="statForm" (ngSubmit)="onSubmit()">
     <h4>Clase</h4>
     <ion-item>
       <ion-select formControlName="class">
@@ -15,53 +16,64 @@
       </ion-select>
     </ion-item>
     <h4>Stats</h4>
-    <ion-item>
-      <ion-select formControlName="stat1" selectedText="{{statsSelected[0]}}" placeholder="1er Stat" (ionChange)="addValue($event, 0)">
-        <div *ngFor="let stat of statsList">
-          <div *ngIf="statsSelected.indexOf(stat) < 0">
-            <ion-select-option [value]="stat">
-              {{stat}}
-            </ion-select-option>
+    <div *ngFor="let i of indexes">
+      <ion-item>
+        <ion-select formControlName="stat{{i+1}}" selectedText="{{statsSelected[i]}}" placeholder="Stat {{i+1}}" (ionChange)="addValue($event, i)">
+          <div *ngFor="let stat of statsList">
+            <div *ngIf="statsSelected.indexOf(stat) < 0">
+              <ion-select-option [value]="stat">
+                {{stat}}
+              </ion-select-option>
+            </div>
           </div>
-        </div>
-      </ion-select>
-    </ion-item>
-    <ion-item>
-      <ion-select formControlName="stat2" selectedText="{{statsSelected[1]}}" placeholder="2ndo Stat" (ionChange)="addValue($event, 1)">
-        <div *ngFor="let stat of statsList">
-          <div *ngIf="statsSelected.indexOf(stat) < 0">
-            <ion-select-option [value]="stat">
-              {{stat}}
-            </ion-select-option>
-          </div>
-        </div>
-      </ion-select>
-    </ion-item>
-    <ion-item>
-      <ion-select formControlName="stat3" selectedText="{{statsSelected[2]}}" placeholder="3er Stat" (ionChange)="addValue($event, 2)">
-        <div *ngFor="let stat of statsList">
-          <div *ngIf="statsSelected.indexOf(stat) < 0">
-            <ion-select-option [value]="stat">
-              {{stat}}
-            </ion-select-option>
-          </div>
-        </div>
-      </ion-select>
-    </ion-item>
+        </ion-select>
+      </ion-item>
+    </div>
     <h4>Mods</h4>
+      <ion-grid>
+        <ion-row *ngFor="let mod of modList, let i = index" class="ion-align-items-center">
+          <ion-col size="2.5">
+            <div class="center-text">{{mod[0]}}</div>
+          </ion-col>
+          <ion-col size="0.5">
+            <ion-toggle (ionChange)="setValue(mod[0])" *ngIf="i != 0"></ion-toggle>   
+          </ion-col>
+          <ion-col *ngFor="let m of mod.slice(1, mod.length), let j = index" size="1.5">
+            <div *ngIf="(mod[0] == 'COSECHADORA DE CARGA' && this.checkCosCharg(j)) || mod[0] != 'COSECHADORA DE CARGA'" class="center-text">{{m}}</div>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    <h4>Aspectos</h4>
+    <div *ngFor="let stat of statsSelected, let i = index">
+      <div *ngIf="stat != null">
+        <ion-label>{{stat}}</ion-label>
+        <ion-range formControlName="aspect{{i+1}}" min="-20" max="20" step="10" pin="true" snaps="true">
+          <div slot="start">-20</div>
+          <div slot="end">20</div>
+        </ion-range>
+      </div>
+    </div>
+    <h4>Excepcional</h4>
     <ion-grid>
-      <ion-row *ngFor="let mod of modList, let i = index" class="ion-align-items-center">
-        <ion-col size="2">
-          <div class="center-text">{{mod[0]}}</div>
-        </ion-col>
-        <ion-col size="0.1">
-          <ion-toggle (ionChange)="setValue(mod[0])" *ngIf="i != 0"></ion-toggle>   
-        </ion-col>
-        <ion-col *ngFor="let m of mod.slice(1, mod.length)">
-          <div class="center-text">{{m}}</div>
+      <ion-row>
+        <ion-col *ngFor="let armor of this.getExoticsFromClass(), let i = index" size="6">  
+          <ion-item>
+            <ion-thumbnail slot="start">
+              <img src="{{armor.iconURL}}">
+            </ion-thumbnail>
+            <ion-label>{{armor.name}}</ion-label>
+            <ion-label *ngIf="statsSelected.indexOf('MOVILIDAD') >= 0" slot="end">MOV: {{armor.mobility}}</ion-label>
+            <ion-label *ngIf="statsSelected.indexOf('RESISTENCIA') >= 0" slot="end">RES: {{armor.resilience}}</ion-label>
+            <ion-label *ngIf="statsSelected.indexOf('RECUPERACION') >= 0" slot="end">REC: {{armor.recovery}}</ion-label>
+            <ion-label *ngIf="statsSelected.indexOf('DISCIPLINA') >= 0" slot="end">DIS: {{armor.discipline}}</ion-label>
+            <ion-label *ngIf="statsSelected.indexOf('INTELECTO') >= 0" slot="end">INT: {{armor.intellect}}</ion-label>
+            <ion-label *ngIf="statsSelected.indexOf('FUERZA') >= 0" slot="end">FUE: {{armor.strength}}</ion-label>
+            <input class="checkmark" slot="end" name="exotic" type="radio" formControlName="exotic" [value]="armor">
+          </ion-item>
         </ion-col>
       </ion-row>
     </ion-grid>
     <ion-button type="submit">Submit</ion-button>
   </form>
+  </div>
 </ion-content>

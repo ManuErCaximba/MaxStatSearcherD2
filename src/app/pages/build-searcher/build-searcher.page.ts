@@ -5,6 +5,7 @@ import { RestService } from 'src/app/data-management/rest.service';
 
 import { ArmorDTO } from 'src/app/model/armorDTO';
 import { ArmorType } from 'src/app/model/enums';
+import { OpService } from 'src/app/services/op.service';
 
 @Component({
   selector: 'app-build-searcher',
@@ -19,12 +20,13 @@ export class BuildSearcherPage implements OnInit {
   public userClasses: any = [];
 
   //Form vars
-  public statsList: string[] = ['MOBILIDAD', 'RESISTENCIA', 'RECUPERACION', 'DISCIPLINA', 'INTELECTO', 'FUERZA'];
+  public indexes: number[] = [0, 1, 2];
+  public statsList: string[] = ['MOVILIDAD', 'RESISTENCIA', 'RECUPERACION', 'DISCIPLINA', 'INTELECTO', 'FUERZA'];
   public statsSelected: string[] = [null, null, null];
   public classList: string[] = ['TITAN', 'CAZADOR', 'HECHICERO'];
 
   public modList = [
-    ['', 'MOBILIDAD', 'RESISTENCIA', 'RECUPERACION', 'DISCIPLINA', 'INTELECTO', 'FUERZA'],
+    ['', 'MOVILIDAD', 'RESISTENCIA', 'RECUPERACION', 'DISCIPLINA', 'INTELECTO', 'FUERZA'],
     ['COSECHADORA DE CARGA', '-10', '-10', '-10', '', '', ''],
     ['CONVERSOR DE ENERGIA', '', '', '', '-10', '', ''],
     ['RESERVAS EXTRA', '', '', '', '', '-10', ''],
@@ -39,7 +41,7 @@ export class BuildSearcherPage implements OnInit {
 
   public statForm: FormGroup;
 
-  constructor(private localService: LocalStorageService, private restService: RestService, private formBuilder: FormBuilder) { }
+  constructor(private localService: LocalStorageService, private restService: RestService, private opService: OpService) { }
 
   async ngOnInit() {
     this.statForm = new FormGroup({
@@ -48,6 +50,10 @@ export class BuildSearcherPage implements OnInit {
       stat2: new FormControl(''),
       stat3: new FormControl(''),
       mods: new FormControl([]),
+      aspect1: new FormControl(''),
+      aspect2: new FormControl(''),
+      aspect3: new FormControl(''),
+      exotic: new FormControl('')
     })
 
     this.authToken = this.localService.getData('mssd2-auth-token');
@@ -91,7 +97,7 @@ export class BuildSearcherPage implements OnInit {
         let inventory = json[itemHash.toString()].inventory;
         let bucketHash = inventory.bucketTypeHash;
         if (bucketHash == '14239492' || bucketHash == '3448274439' || bucketHash == '3551918588' || bucketHash == '20886954') {
-          let isExotic = inventory.tierTypeName === 'Exotic' ? true : false;
+          let isExotic = inventory.tierTypeName === 'Exotic' || inventory.tierTypeName === 'Excepcional' ? true : false;
           let classType = json[itemHash.toString()].classType;
           let itemSockets = item['Response'].sockets.data.sockets.slice(6, 10);
           let styleHash = item['Response'].item.data.overrideStyleItemHash;
@@ -137,15 +143,39 @@ export class BuildSearcherPage implements OnInit {
       modL.splice(modL.indexOf(mod), 1);
       this.statForm.controls.mods.setValue(modL);
     }
-    console.log(mod);
   }
 
   public onSubmit() {
-    console.log(this.statForm)
+
+    this.opService.calc(this.statForm, this.armorsList);
+  }
+
+  public getExoticsFromClass() {
+    let res = [];
+    for (let i = 0; i < this.armorsList.length; i++) {
+      if (this.armorsList[i].isExotic && this.classList.indexOf(this.getClassValue()) == this.armorsList[i].classType) {
+        res.push(this.armorsList[i]);
+      }
+    }
+    res.sort((a,b) => {
+      if(a.name < b.name) { return -1; }
+      if(a.name > b.name) { return 1; }
+      return 0;
+    });
+    return res;
   }
 
   public addValue($event, index) {
     this.statsSelected[index] = $event.detail.value;
+  }
+
+  public checkCosCharg(index: number) {
+    let c = this.getClassValue();
+    return (c == 'CAZADOR' && index == 0) || (c == 'TITAN' && index == 1) || (c == 'HECHICERO' && index == 2)
+  }
+
+  public getClassValue() {
+    return this.statForm.get('class').value;
   }
 
   private getStats(investmestStats: any[]) {

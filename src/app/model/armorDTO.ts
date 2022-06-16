@@ -48,5 +48,37 @@ export class ArmorDTO {
         this.classType = classType;
         this.isExotic = isExotic;
     }
+
+    public getCaximBalue(values: number[], names: string[]) {
+        let sum = [0, 0, 0]
+        for (let i = 0; i < 3; i++) {
+            sum[i] = values[i] + this.getStatByName(names[i]);
+        }
+        let res = 0;
+        sum.forEach(e => {
+            let div = e / 10;
+            let int = Math.floor(div);
+            let cent = (div - int) / 10;
+            res += (int + cent);
+        })
+        return res;
+    }
+
+    public getStatByName(name: string) {
+        switch (name) {
+            case 'MOVILIDAD':
+                return this.mobility;
+            case 'RESISTENCIA':
+                return this.resilience;
+            case 'RECUPERACION':
+                return this.recovery;
+            case 'DISCIPLINA':
+                return this.discipline;
+            case 'INTELECTO':
+                return this.intellect;
+            case 'FUERZA':
+                return this.strength;
+        }
+    }
 }
   

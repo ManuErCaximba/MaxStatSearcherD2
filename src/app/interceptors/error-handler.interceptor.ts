@@ -2,10 +2,10 @@ import { HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest
 import { Inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators'
-import { DOCUMENT } from '@angular/common';
-import { LocalStorageService } from 'src/app/data-management/local-storage.service';
 import { RestService } from '../data-management/rest.service';
-import { Router } from '@angular/router';
+import { NavController } from '@ionic/angular';
+import { BuildSearcherPage } from '../pages/build-searcher/build-searcher.page';
+import { LocalStorageService } from '../data-management/local-storage.service';
 
 @Injectable({
   providedIn: 'root'
@@ -13,10 +13,9 @@ import { Router } from '@angular/router';
 export class ErrorHandlerInterceptor implements HttpInterceptor{
 
   constructor(
-    @Inject(DOCUMENT) private document: Document,
-    private localService: LocalStorageService,
     private restService: RestService,
-    private router: Router
+    private navCtrl: NavController,
+    private localService: LocalStorageService
   ) {}
 
   intercept(
@@ -32,12 +31,13 @@ export class ErrorHandlerInterceptor implements HttpInterceptor{
           if (err instanceof HttpErrorResponse) {
             if (err.status == 401 || err.status == 400) {
               this.restService.getRefreshToken().subscribe(
-                () => {
-                  this.router.navigate(['build-searcher']);
+                (data) => {
+                  this.localService.saveData('mssd2-auth-token', data['access_token']);
+                  this.localService.saveData('mssd2-refresh-token', data['refresh_token']);
+                  this.navCtrl.navigateForward('/build-searcher')
                 },
                 (err) => {
-                  this.router.navigate(['login']);
-                  console.log(err);
+                  this.navCtrl.navigateForward('/login')
                 }
               );
             }
