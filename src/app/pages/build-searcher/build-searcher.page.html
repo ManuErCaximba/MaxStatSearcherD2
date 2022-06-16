@@ -1,9 +1,67 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>build-searcher</ion-title>
+    <ion-title>Build Searcher</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-  <div id="container">Hola</div>
+  <form [formGroup]="statForm" (ngSubmit)="onSubmit()">
+    <h4>Clase</h4>
+    <ion-item>
+      <ion-select formControlName="class">
+        <ion-select-option *ngFor="let class of classList" [value]="class">
+          {{class}}
+        </ion-select-option>
+      </ion-select>
+    </ion-item>
+    <h4>Stats</h4>
+    <ion-item>
+      <ion-select formControlName="stat1" selectedText="{{statsSelected[0]}}" placeholder="1er Stat" (ionChange)="addValue($event, 0)">
+        <div *ngFor="let stat of statsList">
+          <div *ngIf="statsSelected.indexOf(stat) < 0">
+            <ion-select-option [value]="stat">
+              {{stat}}
+            </ion-select-option>
+          </div>
+        </div>
+      </ion-select>
+    </ion-item>
+    <ion-item>
+      <ion-select formControlName="stat2" selectedText="{{statsSelected[1]}}" placeholder="2ndo Stat" (ionChange)="addValue($event, 1)">
+        <div *ngFor="let stat of statsList">
+          <div *ngIf="statsSelected.indexOf(stat) < 0">
+            <ion-select-option [value]="stat">
+              {{stat}}
+            </ion-select-option>
+          </div>
+        </div>
+      </ion-select>
+    </ion-item>
+    <ion-item>
+      <ion-select formControlName="stat3" selectedText="{{statsSelected[2]}}" placeholder="3er Stat" (ionChange)="addValue($event, 2)">
+        <div *ngFor="let stat of statsList">
+          <div *ngIf="statsSelected.indexOf(stat) < 0">
+            <ion-select-option [value]="stat">
+              {{stat}}
+            </ion-select-option>
+          </div>
+        </div>
+      </ion-select>
+    </ion-item>
+    <h4>Mods</h4>
+    <ion-grid>
+      <ion-row *ngFor="let mod of modList, let i = index" class="ion-align-items-center">
+        <ion-col size="2">
+          <div class="center-text">{{mod[0]}}</div>
+        </ion-col>
+        <ion-col size="0.1">
+          <ion-toggle (ionChange)="setValue(mod[0])" *ngIf="i != 0"></ion-toggle>   
+        </ion-col>
+        <ion-col *ngFor="let m of mod.slice(1, mod.length)">
+          <div class="center-text">{{m}}</div>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+    <ion-button type="submit">Submit</ion-button>
+  </form>
 </ion-content>

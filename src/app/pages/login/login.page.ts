@@ -12,9 +12,9 @@ import { RestService } from 'src/app/data-management/rest.service';
 export class LoginPage implements OnInit {
   public href: string =
     'https://www.bungie.net/en/OAuth/Authorize?client_id=40559&response_type=code';
-  public code: any = undefined;
-  public bungieName: string = null;
-  public local: any = null;
+  public code: any;
+  public bungieName: string;
+  public local: any;
 
   public showLogin: boolean = false;
 
@@ -26,6 +26,25 @@ export class LoginPage implements OnInit {
   ) {}
 
   public ngOnInit() {
+    let authCode = this.response.snapshot.queryParams['code'];
+    if (authCode === undefined || authCode === null) {
+      authCode = this.localService.getData('mssd2-auth-code');
+    }
+    this.restService.getAuthToken(authCode).subscribe(
+      (data) => {
+        console.log(data);
+        this.localService.saveData('mssd2-auth-code', authCode);
+        this.localService.saveData('mssd2-auth-token', data['access_token']);
+        this.localService.saveData('mssd2-refresh-token', data['refresh_token']);
+        this.router.navigate(['build-searcher']);
+      },
+      (error) => {
+        console.log(error);
+        this.showLogin = true;
+      }
+    );
+    /*
+    this.restService.getAuthToken(authCode);
     let clientToken = this.localService.getData('mssd2-auth-token');
     if (clientToken !== null && clientToken !== undefined) {
       this.router.navigate(['/build-searcher']);
@@ -37,6 +56,6 @@ export class LoginPage implements OnInit {
       } else {
         this.showLogin = true;
       }
-    }
+    }*/
   }
 }

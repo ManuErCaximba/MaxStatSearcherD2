@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output } from '@angular/core';
+import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { LocalStorageService } from 'src/app/data-management/local-storage.service';
 import { RestService } from 'src/app/data-management/rest.service';
 
@@ -11,11 +12,44 @@ import { ArmorType } from 'src/app/model/enums';
   styleUrls: ['./build-searcher.page.scss'],
 })
 export class BuildSearcherPage implements OnInit {
-  public authToken: string;
 
-  constructor(private localService: LocalStorageService, private restService: RestService) { }
+  //Init vars
+  public authToken: string;
+  public armorsList = [];
+  public userClasses: any = [];
+
+  //Form vars
+  public statsList: string[] = ['MOBILIDAD', 'RESISTENCIA', 'RECUPERACION', 'DISCIPLINA', 'INTELECTO', 'FUERZA'];
+  public statsSelected: string[] = [null, null, null];
+  public classList: string[] = ['TITAN', 'CAZADOR', 'HECHICERO'];
+
+  public modList = [
+    ['', 'MOBILIDAD', 'RESISTENCIA', 'RECUPERACION', 'DISCIPLINA', 'INTELECTO', 'FUERZA'],
+    ['COSECHADORA DE CARGA', '-10', '-10', '-10', '', '', ''],
+    ['CONVERSOR DE ENERGIA', '', '', '', '-10', '', ''],
+    ['RESERVAS EXTRA', '', '', '', '', '-10', ''],
+    ['AMISTADES PODEROSAS', '+20', '', '', '', '', ''],
+    ['CARGA CON PRECISION', '', '', '', '-10', '', ''],
+    ['CARGA DE PRECISION', '', '', '', '', '', '-10'],
+    ['LUZ PROTECTORA', '', '', '', '', '', '-10'],
+    ['LUZ RADIANTE', '', '', '', '', '', '+20'],
+    ['CARGA Y RECARGA', '', '', '-10', '', '', ''],
+    ['ATAQUE SORPRESA', '', '', '', '', '-10', ''],
+  ]
+
+  public statForm: FormGroup;
+
+  constructor(private localService: LocalStorageService, private restService: RestService, private formBuilder: FormBuilder) { }
 
   async ngOnInit() {
+    this.statForm = new FormGroup({
+      class: new FormControl(''),
+      stat1: new FormControl(''),
+      stat2: new FormControl(''),
+      stat3: new FormControl(''),
+      mods: new FormControl([]),
+    })
+
     this.authToken = this.localService.getData('mssd2-auth-token');
 
     let currentUser = await this.restService.getCurrentUser().toPromise();
@@ -23,55 +57,54 @@ export class BuildSearcherPage implements OnInit {
     let membershipId = currentUser['Response'].destinyMemberships[0].membershipId;
 
     let profile = await this.restService.getProfile(membershipType, membershipId).toPromise();
+    console.log(profile);
     let characterIds = profile['Response'].profile.data.characterIds;
     let items = [];
     for (let i = 0; i < 3; i++) {
       let temp = [];
       temp = [...temp, ...profile['Response'].characterEquipment.data[characterIds[i]].items];
       temp = [...temp, ...profile['Response'].characterInventories.data[characterIds[i]].items];
-      items.push(temp);
+      items = items.concat(temp);
     }
+    items = items.concat(profile['Response'].profileInventory.data.items);
+    console.log(items);
 
     let armors = [];
-    items.forEach(charItems => {
-      let temp = []
-      charItems.map(i => {
-        let isArmor = i.bucketHash == '14239492' || i.bucketHash == '3448274439' || i.bucketHash == '3551918588' || i.bucketHash == '20886954';
-        if (isArmor) {
-          temp.push(i);
-        }
-      });
-      armors.push(temp);
+    items.forEach(i => {
+      let isArmor = i.bucketHash == '14239492' || i.bucketHash == '3448274439' || i.bucketHash == '3551918588' || i.bucketHash == '20886954' || i.bucketHash == '138197802';
+      if (isArmor) {
+        armors.push(i);
+      }
     })
+    console.log(armors);
 
     let armorsIds = [];
-    armors.forEach(charItems => {
-      let temp = []
-      charItems.map(a => {
-        temp.push(a.itemInstanceId);
-      })
-      armorsIds.push(temp);
+    armors.forEach(i => {
+      armorsIds.push(i.itemInstanceId);
     })
 
-    let defItems = [];
+    console.log(armorsIds);
     this.restService.getItemManifestInfo().then(json => {
-      armorsIds.forEach(async charItems => {
-        let temp = []
-        charItems.forEach(async id => {
-          let item = await this.restService.getItem(membershipType, membershipId, id).toPromise();
-          let itemHash = item['Response'].item.data.itemHash;
+      armorsIds.forEach(async id => {
+        let item = await this.restService.getItem(membershipType, membershipId, id).toPromise();
+        let itemHash = item['Response'].item.data.itemHash;
+        let inventory = json[itemHash.toString()].inventory;
+        let bucketHash = inventory.bucketTypeHash;
+        if (bucketHash == '14239492' || bucketHash == '3448274439' || bucketHash == '3551918588' || bucketHash == '20886954') {
+          let isExotic = inventory.tierTypeName === 'Exotic' ? true : false;
+          let classType = json[itemHash.toString()].classType;
+          let itemSockets = item['Response'].sockets.data.sockets.slice(6, 10);
           let styleHash = item['Response'].item.data.overrideStyleItemHash;
           let iconUrl = styleHash !== undefined ? json[styleHash.toString()].displayProperties.icon : json[itemHash.toString()].displayProperties.icon;
           let name = json[itemHash].displayProperties.name;
-          let itemSockets = item['Response'].sockets.data.sockets.slice(6, 10);
           let investmestStats = [];
           for (let i = 0; i < itemSockets.length; i++) {
-            investmestStats.push(json[itemSockets[i].plugHash].investmentStats);
+            let index = json[itemSockets[i].plugHash.toString()].investmentStats;
+            investmestStats.push(index);
           }
           let baseStats = this.getStats(investmestStats);
-          let armorType = this.getArmorType(item['Response'].item.data.bucketHash);
-          let classType = json[itemHash.toString()].classType;
-          temp.push(new ArmorDTO(
+          let armorType = this.getArmorType(inventory.bucketTypeHash);
+          this.armorsList.push(new ArmorDTO(
             id,
             itemHash,
             name,
@@ -83,12 +116,36 @@ export class BuildSearcherPage implements OnInit {
             baseStats[4],
             baseStats[5],
             armorType,
-            classType
+            classType,
+            isExotic
           ));
-        });
-        defItems.push(temp)
-      });
+        }
+      })
     });
+    console.log(this.armorsList);
+  }
+
+  public setValue(mod) {
+    let modL = [];
+    let values = this.statForm.get('mods').value;
+    if (values.indexOf(mod) < 0) {
+      modL = [...modL, ...values];
+      modL = [...modL, mod];
+      this.statForm.controls.mods.setValue(modL);
+    } else {
+      modL = values;
+      modL.splice(modL.indexOf(mod), 1);
+      this.statForm.controls.mods.setValue(modL);
+    }
+    console.log(mod);
+  }
+
+  public onSubmit() {
+    console.log(this.statForm)
+  }
+
+  public addValue($event, index) {
+    this.statsSelected[index] = $event.detail.value;
   }
 
   private getStats(investmestStats: any[]) {

@@ -22,8 +22,8 @@ export class RestService {
   public async getItemManifestInfo() {
     let manifest = await this.getManifest().toPromise();
     let urlAdd: string = manifest['Response'].jsonWorldComponentContentPaths.en['DestinyInventoryItemDefinition'];
-    return await fetch('https://www.bungie.net/' + urlAdd).then(res => {
-      return res.json();
+    return await fetch('https://www.bungie.net/' + urlAdd).then(async res => {
+      return await res.json();
     })
   }
 
@@ -55,7 +55,7 @@ export class RestService {
     .set('X-API-key', environment.API_KEY);
     return this.httpClient
       .get(
-        'https://www.bungie.net/Platform/Destiny2/' + membershipType + '/Profile/' + membershipId + '/?components=100,201,205',
+        'https://www.bungie.net/Platform/Destiny2/' + membershipType + '/Profile/' + membershipId + '/?components=100,102,201,205',
         { headers: headers }
       )
   }
@@ -78,22 +78,29 @@ export class RestService {
     );
     const body = new HttpParams()
       .set('client_id', environment.CLIENT_ID)
+      .set('client_secret', environment.CLIENT_SECRET)
       .set('grant_type', 'authorization_code')
       .set('code', authCode);
-    this.httpClient
+    return this.httpClient
       .post('https://www.bungie.net/platform/app/oauth/token/', body, {
         headers,
       })
-      .subscribe(
-        (data) => {
-          console.log(data);
-          this.localService.saveData('mssd2-auth-token', data['access_token']);
-          this.router.navigate(['/build-searcher']);
-        },
-        (error) => {
-          console.log(error);
-        }
-      );
+  }
+
+  public getRefreshToken() {
+    const headers = new HttpHeaders().set(
+      'Content-Type',
+      'application/x-www-form-urlencoded'
+    );
+    const body = new HttpParams()
+      .set('client_id', environment.CLIENT_ID)
+      .set('client_secret', environment.CLIENT_SECRET)
+      .set('grant_type', 'refresh_token')
+      .set('refresh_token', this.localService.getData('mssd2-refresh-token'));
+    return this.httpClient
+      .post('https://www.bungie.net/platform/app/oauth/token/', body, {
+        headers,
+      })
   }
 
 

@@ -4,6 +4,8 @@ import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators'
 import { DOCUMENT } from '@angular/common';
 import { LocalStorageService } from 'src/app/data-management/local-storage.service';
+import { RestService } from '../data-management/rest.service';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +14,9 @@ export class ErrorHandlerInterceptor implements HttpInterceptor{
 
   constructor(
     @Inject(DOCUMENT) private document: Document,
-    private localService: LocalStorageService
+    private localService: LocalStorageService,
+    private restService: RestService,
+    private router: Router
   ) {}
 
   intercept(
@@ -25,15 +29,19 @@ export class ErrorHandlerInterceptor implements HttpInterceptor{
           // Nothing
         },
         (err) => {
-          /*
           if (err instanceof HttpErrorResponse) {
-            if (err.status == 401 || err.status == 500 || err.status == 400) {
-              this.localService.removeData('mssd2-auth-token');
-              this.localService.removeData('mssd2-auth-code');
-              this.document.location.href = 'https://www.bungie.net/en/OAuth/Authorize?client_id=40559&response_type=code';
+            if (err.status == 401 || err.status == 400) {
+              this.restService.getRefreshToken().subscribe(
+                () => {
+                  this.router.navigate(['build-searcher']);
+                },
+                (err) => {
+                  this.router.navigate(['login']);
+                  console.log(err);
+                }
+              );
             }
           }
-          */
         }
       )
     );
