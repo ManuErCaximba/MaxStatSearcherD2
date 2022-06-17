@@ -37,7 +37,7 @@ export class OpService {
       defStat3 += modsValues[2];
     }
     let purArmor = this.getLegendaryArmor(armorsList, exotic);
-
+    let armorsTypes = [exotic.armorType];
     // Algorithm
     let one = [];
     let oneMaxC = 0;
@@ -45,73 +45,100 @@ export class OpService {
     let twoMaxC = 0;
     let three = [];
     let threeMaxC = 0;
+    let four = [];
+    let fourMaxC = 0;
     let checkSum = [];
+
     for (let i = 0; i < purArmor.length; i++) {
       let a = purArmor[i];
-      let x = a.getCaximBalue([defStat1, defStat2, defStat3], [stat1, stat2, stat3]);
+      let x = a.getCaximBalue([defStat1, defStat2, defStat3], [stat1, stat2, stat3]) / 2;
       if (x > oneMaxC) {
         oneMaxC = x;
         one = [a]
       }
-      for (let j = 0; j < purArmor.length; j++) {
-        let b = purArmor[j]
-        let csj = a.id + b.id;
-        if ((i != j) && (a.armorType != b.armorType) && (checkSum.indexOf(csj.toString()) < 0)) {
-          let y = b.getCaximBalue([defStat1, defStat2, defStat3], [stat1, stat2, stat3]);
-          let xy = (x + y) / 2;
-          if (xy > twoMaxC) {
-            twoMaxC = xy;
-            two = [a, b];
-          }
-          if (exotic == null || exotic == undefined) {
-            for (let k = 0; j < purArmor.length; k++) {
-              let c = purArmor[k];
-              let csk = c.id + csj;
-              if ((i != k) && (j != k) && (a.armorType != c.armorType) && (b.armorType != c.armorType) && (checkSum.indexOf(csk.toString()) < 0)) {
-                let z = c.getCaximBalue([defStat1, defStat2, defStat3], [stat1, stat2, stat3]);
-                let xyz = (x + y + z) / 3;
-                if (xyz > threeMaxC) {
-                  threeMaxC = xyz;
-                  three = [a, b, c];
-                }
-              }
-              checkSum.push(csk.toString());
-            }
-          }
-
-        }
-        checkSum.push(csj.toString());
+    }
+    
+    armorsTypes.push(one[0].armorType);
+    let purArmor2 = [];
+    purArmor.forEach(e => {
+      if (armorsTypes.indexOf(e.armorType) < 0) {
+        purArmor2.push(e);
+      }
+    })
+    for (let i = 0; i < purArmor2.length; i++) {
+      let b = purArmor2[i]
+      let xy = ((2*oneMaxC) + b.getCaximBalue([defStat1, defStat2, defStat3], [stat1, stat2, stat3])) / 3;
+      if (xy > twoMaxC) {
+        twoMaxC = xy;
+        two = [one[0], b];
       }
     }
-    
-    // Preparing results
+
+    armorsTypes.push(two[1].armorType);
+    let purArmor3 = [];
+    purArmor2.forEach(e => {
+      if (armorsTypes.indexOf(e.armorType) < 0) {
+        purArmor3.push(e);
+      }
+    })
+    for (let i = 0; i < purArmor3.length; i++) {
+      let c = purArmor3[i]
+      let xyz = ((3*twoMaxC) + c.getCaximBalue([defStat1, defStat2, defStat3], [stat1, stat2, stat3])) / 4;
+      if (xyz > twoMaxC) {
+        threeMaxC = xyz;
+        three = [two[0], two[1], c];
+      }
+    }
+
+    if (exotic === null || exotic === undefined) {
+      armorsTypes.push(three[2].armorType);
+      let purArmor4 = [];
+      purArmor3.forEach(e => {
+        if (armorsTypes.indexOf(e.armorType) < 0) {
+          purArmor4.push(e);
+        }
+      })
+      for (let i = 0; i < purArmor4.length; i++) {
+        let d = purArmor4[i]
+        let xyzt = ((4*threeMaxC) + d.getCaximBalue([defStat1, defStat2, defStat3], [stat1, stat2, stat3])) / 4;
+        if (xyzt > threeMaxC) {
+          threeMaxC = xyzt;
+          three = [three[0], three[1], three[2], d];
+        }
+      }
+    }
+
     let results = []
-    let threeRes = (exotic == null || exotic == undefined);
-    let r;
-    if (threeRes) {
-      r = this.createResult(three, [defStat1, defStat2, defStat3], [stat1, stat2, stat3])
-      results.push(r);
-    }
-    if (!threeRes || twoMaxC >= threeMaxC) {
-      r = this.createResult(two, [defStat1, defStat2, defStat3], [stat1, stat2, stat3])
-      results.push(r);
-    }
-    if (oneMaxC >= twoMaxC) {
-      r = this.createResult(two, [defStat1, defStat2, defStat3], [stat1, stat2, stat3])
-      results.push(r);
-    }
-    
+    let combList = [one, two, three, four];
+
+    combList.forEach(comb => {
+      let sum = [defStat1, defStat2, defStat3];
+      comb.forEach(a => {
+        sum[0] += a.getStatByName(stat1);
+        sum[1] += a.getStatByName(stat2);
+        sum[2] += a.getStatByName(stat3);
+      })
+      let mods =  this.getMods(sum, [stat1, stat2, stat3]);
+      results.push([sum, mods, comb, [stat1, stat2, stat3]])
+    })   
     return results;
   }
 
-  private createResult(one, [defStat1, defStat2, defStat3], [stat1, stat2, stat3]) {
-
+  private getMods(values: number[], stats: string[]) {
+    let mods = []
+    for (let i = 0; i < 5; i++) {
+      let value = Math.min.apply(null, values);
+      let index = values.indexOf(value);
+      mods.push(stats[index]);
+      values[index] += 10
+    }
+    return mods;
   }
 
   private getLegendaryArmor(armorsList, exotic) {
     let res = [];
     armorsList.forEach(a => {
-      if (a.classType !== exotic.classType && !a.isExotic) {
+      if ((exotic === null || (exotic !== null && a.classType !== exotic.classType)) && !a.isExotic) {
         res.push(a);
       }
     })

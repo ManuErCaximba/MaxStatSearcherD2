@@ -15,6 +15,10 @@ const routes: Routes = [
     path: 'build-searcher',
     loadChildren: () => import('./pages/build-searcher/build-searcher.module').then( m => m.BuildSearcherPageModule)
   },
+  {
+    path: 'result',
+    loadChildren: () => import('./pages/result/result.module').then( m => m.ResultPageModule)
+  },
 ];
 
 @NgModule({

@@ -43,19 +43,5 @@ export class LoginPage implements OnInit {
         this.showLogin = true;
       }
     );
-    /*
-    this.restService.getAuthToken(authCode);
-    let clientToken = this.localService.getData('mssd2-auth-token');
-    if (clientToken !== null && clientToken !== undefined) {
-      this.router.navigate(['/build-searcher']);
-    } else {
-      let authCode = this.response.snapshot.queryParams['code'];
-      this.localService.saveData('mssd2-auth-code', authCode);
-      if (authCode !== null && authCode !== undefined) {
-        this.restService.getAuthToken(authCode);
-      } else {
-        this.showLogin = true;
-      }
-    }*/
   }
 }

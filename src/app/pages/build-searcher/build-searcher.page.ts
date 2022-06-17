@@ -1,11 +1,14 @@
 import { Component, OnInit, Output } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { Router } from '@angular/router';
+import { NavController } from '@ionic/angular';
 import { LocalStorageService } from 'src/app/data-management/local-storage.service';
 import { RestService } from 'src/app/data-management/rest.service';
 
 import { ArmorDTO } from 'src/app/model/armorDTO';
 import { ArmorType } from 'src/app/model/enums';
 import { OpService } from 'src/app/services/op.service';
+import { ResultPage } from '../result/result.page';
 
 @Component({
   selector: 'app-build-searcher',
@@ -41,7 +44,11 @@ export class BuildSearcherPage implements OnInit {
 
   public statForm: FormGroup;
 
-  constructor(private localService: LocalStorageService, private restService: RestService, private opService: OpService) { }
+  constructor(
+    private localService: LocalStorageService,
+    private restService: RestService,
+    private opService: OpService,
+    private router: Router) { }
 
   async ngOnInit() {
     this.statForm = new FormGroup({
@@ -146,8 +153,8 @@ export class BuildSearcherPage implements OnInit {
   }
 
   public onSubmit() {
-
-    this.opService.calc(this.statForm, this.armorsList);
+    let results = this.opService.calc(this.statForm, this.armorsList);
+    this.router.navigate(['/result', { results: results}]);
   }
 
   public getExoticsFromClass() {
