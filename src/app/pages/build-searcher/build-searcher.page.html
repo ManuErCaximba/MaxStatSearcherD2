@@ -6,7 +6,7 @@
 
 <ion-content>
   <div class="container">
-<form [formGroup]="statForm" (ngSubmit)="onSubmit()">
+  <form [formGroup]="statForm" (ngSubmit)="onSubmit()">
     <h4>Clase</h4>
     <ion-item>
       <ion-select formControlName="class">
@@ -43,11 +43,11 @@
           </ion-col>
         </ion-row>
       </ion-grid>
-    <h4>Aspectos</h4>
+    <h4>Fragmentos</h4>
     <div *ngFor="let stat of statsSelected, let i = index">
       <div *ngIf="stat != null">
         <ion-label>{{stat}}</ion-label>
-        <ion-range formControlName="aspect{{i+1}}" min="-20" max="20" step="10" pin="true" snaps="true">
+        <ion-range formControlName="fragment{{i+1}}" min="-20" max="20" step="10" pin="true" snaps="true">
           <div slot="start">-20</div>
           <div slot="end">20</div>
         </ion-range>

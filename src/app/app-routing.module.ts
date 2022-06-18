@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
+import { DataResolverService } from './data-management/data.resolver.service';
 
 const routes: Routes = [
   {
@@ -17,6 +18,9 @@ const routes: Routes = [
   },
   {
     path: 'result',
+    resolve: {
+      results: DataResolverService
+    },
     loadChildren: () => import('./pages/result/result.module').then( m => m.ResultPageModule)
   },
 ];

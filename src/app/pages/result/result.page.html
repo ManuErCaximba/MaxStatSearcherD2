@@ -5,5 +5,469 @@
 </ion-header>
 
 <ion-content>
-
+  <div [class]="this.container">
+    <ion-grid *ngFor="let i of iterates">
+      <h4 *ngIf="i >= 5">{{this.getTitles(i)}}</h4>
+      <ion-row>
+        <div *ngIf="exotic === undefined || exotic === null">
+          <ion-col [size]="this.getSize()">
+            <h4 *ngIf="i == 0">Farmear tres piezas</h4>
+            <ion-item *ngIf="i < 4">
+              <ion-thumbnail slot="start">
+                <img src="{{this.getArmorById(this.armors[this.armors.length - 4], i).iconURL}}">
+              </ion-thumbnail>
+              <ion-label slot="end">
+                <span class="text">{{this.getAcronym(this.stats[0])}}</span>
+                <span class="text">{{this.getStatByName(this.getArmorById(this.armors[this.armors.length - 4], i), this.stats[0])}}</span>
+                <span class="masterwork"> (+2)</span>
+              </ion-label>
+              <ion-label slot="end">
+                <span class="text">{{this.getAcronym(this.stats[1])}}</span>
+                <span class="text">{{this.getStatByName(this.getArmorById(this.armors[this.armors.length - 4], i), this.stats[1])}}</span>
+                <span class="masterwork"> (+2)</span>
+              </ion-label>
+              <ion-label slot="end">
+                <span class="text">{{this.getAcronym(this.stats[2])}}</span>
+                <span class="text">{{this.getStatByName(this.getArmorById(this.armors[this.armors.length - 4], i), this.stats[2])}}</span>
+                <span class="masterwork"> (+2)</span>
+              </ion-label>
+            </ion-item>
+            <ion-item *ngIf="i == 4">
+              <ion-thumbnail slot="start">
+                <img src="https://www.bungie.net/common/destiny2_content/icons/1df0fc5001c4c2508a3cd29e50e033d5.jpg">
+              </ion-thumbnail>
+              <ion-label slot="end">
+                <span class="text">{{this.getAcronym(this.stats[0])}}</span>
+                <span class="masterwork">(+2)</span>
+              </ion-label>
+              <ion-label slot="end">
+                <span class="text">{{this.getAcronym(this.stats[1])}}</span>
+                <span class="masterwork">(+2)</span>
+              </ion-label>
+              <ion-label slot="end">
+                <span class="text">{{this.getAcronym(this.stats[2])}}</span>
+                <span class="masterwork">(+2)</span>
+              </ion-label>
+            </ion-item>
+            <ion-item *ngIf="i == 5">
+              <ion-thumbnail slot="start">
+                <img src="https://www.bungie.net/common/destiny2_content/icons/afc99a15bf6a435badc1110e81efcc2e.jpg">
+              </ion-thumbnail>
+              <ion-label slot="end">
+                <span class="text">{{this.getAcronym(this.stats[0])}}</span>
+                <span *ngIf="this.fragments[0] >= 0" class="positivo">+{{this.fragments[0]}}</span>
+                <span *ngIf="this.fragments[0] < 0"class="negativo">-{{this.fragments[0]}}</span>
+              </ion-label>
+              <ion-label slot="end">
+                <span class="text">{{this.getAcronym(this.stats[1])}}</span>
+                <span *ngIf="this.fragments[1] >= 0" class="positivo">+{{this.fragments[1]}}</span>
+                <span *ngIf="this.fragments[1] < 0"class="negativo">-{{this.fragments[1]}}</span>
+              </ion-label>
+              <ion-label slot="end">
+                <span class="text">{{this.getAcronym(this.stats[2])}}</span>
+                <span *ngIf="this.fragments[2] >= 0" class="positivo">+{{this.fragments[2]}}</span>
+                <span *ngIf="this.fragments[2] < 0"class="negativo">-{{this.fragments[2]}}</span>
+              </ion-label>
+            </ion-item>
+            <ion-item *ngIf="i == 6">
+              <ion-thumbnail slot="start">
+                <img src="https://www.bungie.net/common/destiny2_content/icons/195f4f173adb52b336b4ecd67101004d.png">
+              </ion-thumbnail>
+              <ion-label slot="end">
+                <span class="text">{{this.getAcronym(this.stats[0])}}</span>
+                <span class="positivo">{{this.getModQuantity(this.armors.length - 4, this.stats[0])}}</span>
+              </ion-label>
+              <ion-label slot="end">
+                <span class="text">{{this.getAcronym(this.stats[1])}}</span>
+                <span class="positivo">{{this.getModQuantity(this.armors.length - 4, this.stats[1])}}</span>
+              </ion-label>
+              <ion-label slot="end">
+                <span class="text">{{this.getAcronym(this.stats[2])}}</span>
+                <span class="positivo">{{this.getModQuantity(this.armors.length - 4, this.stats[2])}}</span>
+              </ion-label>
+            </ion-item>
+            <ion-item *ngIf="i == 7">
+              <ion-thumbnail slot="start">
+                <img src="https://www.bungie.net/common/destiny2_content/icons/a8acc2b6cf36527f879051a38622e310.png">
+              </ion-thumbnail>
+              <ion-label slot="end">
+                <span class="text">{{this.getAcronym(this.stats[0])}}</span>
+                <span *ngIf="this.classModsValues[0] >= 0" class="positivo">{{this.classModsValues[0]}}</span>
+                <span *ngIf="this.classModsValues[0] < 0"class="negativo">-{{this.classModsValues[0]}}</span>
+              </ion-label>
+              <ion-label slot="end">
+                <span class="text">{{this.getAcronym(this.stats[1])}}</span>
+                <span *ngIf="this.classModsValues[1] >= 0" class="positivo">{{this.classModsValues[1]}}</span>
+                <span *ngIf="this.classModsValues[1] < 0"class="negativo">-{{this.classModsValues[1]}}</span>
+              </ion-label>
+              <ion-label slot="end">
+                <span class="text">{{this.getAcronym(this.stats[2])}}</span>
+                <span *ngIf="this.classModsValues[2] >= 0" class="positivo">{{this.classModsValues[2]}}</span>
+                <span *ngIf="this.classModsValues[2] < 0"class="negativo">-{{this.classModsValues[2]}}</span>
+              </ion-label>
+            </ion-item>
+            <ion-item *ngIf="i == 8">
+              <ion-thumbnail slot="start">
+                <img src="https://www.bungie.net/common/destiny2_content/icons/d22aab3566d92ba0207544349d9651c9.png">
+              </ion-thumbnail>
+              <ion-label slot="end">
+                <span class="text">{{this.getAcronym(this.stats[0])}}</span>
+                <span class="text">{{this.getTotalFromStat(this.armors.length - 4, 0)}}</span>
+              </ion-label>
+              <ion-label slot="end">
+                <span class="text">{{this.getAcronym(this.stats[1])}}</span>
+                <span class="text">{{this.getTotalFromStat(this.armors.length - 4, 1)}}</span>
+              </ion-label>
+              <ion-label slot="end">
+                <span class="text">{{this.getAcronym(this.stats[2])}}</span>
+                <span class="text">{{this.getTotalFromStat(this.armors.length - 4, 2)}}</span>
+              </ion-label>
+            </ion-item>
+          </ion-col>
+        </div>
+        <ion-col [size]="this.getSize()">
+          <h4 *ngIf="i == 0">Farmear dos piezas</h4>
+          <ion-item *ngIf="i < 4">
+            <ion-thumbnail slot="start">
+              <img src="{{this.getArmorById(this.armors[this.armors.length - 3], i).iconURL}}">
+            </ion-thumbnail>
+            <ion-label slot="end">
+              <span class="text">{{this.getAcronym(this.stats[0])}}</span>
+              <span class="text">{{this.getStatByName(this.getArmorById(this.armors[this.armors.length - 3], i), this.stats[0])}}</span>
+              <span class="masterwork"> (+2)</span>
+            </ion-label>
+            <ion-label slot="end">
+              <span class="text">{{this.getAcronym(this.stats[1])}}</span>
+              <span class="text">{{this.getStatByName(this.getArmorById(this.armors[this.armors.length - 3], i), this.stats[1])}}</span>
+              <span class="masterwork"> (+2)</span>
+            </ion-label>
+            <ion-label slot="end">
+              <span class="text">{{this.getAcronym(this.stats[2])}}</span>
+              <span class="text">{{this.getStatByName(this.getArmorById(this.armors[this.armors.length - 3], i), this.stats[2])}}</span>
+              <span class="masterwork"> (+2)</span>
+            </ion-label>
+          </ion-item>
+          <ion-item *ngIf="i == 4">
+            <ion-thumbnail slot="start">
+              <img src="https://www.bungie.net/common/destiny2_content/icons/1df0fc5001c4c2508a3cd29e50e033d5.jpg">
+            </ion-thumbnail>
+            <ion-label slot="end">
+              <span class="text">{{this.getAcronym(this.stats[0])}}</span>
+              <span class="masterwork">(+2)</span>
+            </ion-label>
+            <ion-label slot="end">
+              <span class="text">{{this.getAcronym(this.stats[1])}}</span>
+              <span class="masterwork">(+2)</span>
+            </ion-label>
+            <ion-label slot="end">
+              <span class="text">{{this.getAcronym(this.stats[2])}}</span>
+              <span class="masterwork">(+2)</span>
+            </ion-label>
+          </ion-item>
+          <ion-item *ngIf="i == 5">
+            <ion-thumbnail slot="start">
+              <img src="https://www.bungie.net/common/destiny2_content/icons/afc99a15bf6a435badc1110e81efcc2e.jpg">
+            </ion-thumbnail>
+            <ion-label slot="end">
+              <span class="text">{{this.getAcronym(this.stats[0])}}</span>
+              <span *ngIf="this.fragments[0] >= 0" class="positivo">+{{this.fragments[0]}}</span>
+              <span *ngIf="this.fragments[0] < 0"class="negativo">-{{this.fragments[0]}}</span>
+            </ion-label>
+            <ion-label slot="end">
+              <span class="text">{{this.getAcronym(this.stats[1])}}</span>
+              <span *ngIf="this.fragments[1] >= 0" class="positivo">+{{this.fragments[1]}}</span>
+              <span *ngIf="this.fragments[1] < 0"class="negativo">-{{this.fragments[1]}}</span>
+            </ion-label>
+            <ion-label slot="end">
+              <span class="text">{{this.getAcronym(this.stats[2])}}</span>
+              <span *ngIf="this.fragments[2] >= 0" class="positivo">+{{this.fragments[2]}}</span>
+              <span *ngIf="this.fragments[2] < 0"class="negativo">-{{this.fragments[2]}}</span>
+            </ion-label>
+          </ion-item>
+          <ion-item *ngIf="i == 6">
+            <ion-thumbnail slot="start">
+              <img src="https://www.bungie.net/common/destiny2_content/icons/195f4f173adb52b336b4ecd67101004d.png">
+            </ion-thumbnail>
+            <ion-label slot="end">
+              <span class="text">{{this.getAcronym(this.stats[0])}}</span>
+              <span class="positivo">{{this.getModQuantity(this.armors.length - 3, this.stats[0])}}</span>
+            </ion-label>
+            <ion-label slot="end">
+              <span class="text">{{this.getAcronym(this.stats[1])}}</span>
+              <span class="positivo">{{this.getModQuantity(this.armors.length - 3, this.stats[1])}}</span>
+            </ion-label>
+            <ion-label slot="end">
+              <span class="text">{{this.getAcronym(this.stats[2])}}</span>
+              <span class="positivo">{{this.getModQuantity(this.armors.length - 3, this.stats[2])}}</span>
+            </ion-label>
+          </ion-item>
+          <ion-item *ngIf="i == 7">
+            <ion-thumbnail slot="start">
+              <img src="https://www.bungie.net/common/destiny2_content/icons/a8acc2b6cf36527f879051a38622e310.png">
+            </ion-thumbnail>
+            <ion-label slot="end">
+              <span class="text">{{this.getAcronym(this.stats[0])}}</span>
+              <span *ngIf="this.classModsValues[0] >= 0" class="positivo">{{this.classModsValues[0]}}</span>
+              <span *ngIf="this.classModsValues[0] < 0"class="negativo">-{{this.classModsValues[0]}}</span>
+            </ion-label>
+            <ion-label slot="end">
+              <span class="text">{{this.getAcronym(this.stats[1])}}</span>
+              <span *ngIf="this.classModsValues[1] >= 0" class="positivo">{{this.classModsValues[1]}}</span>
+              <span *ngIf="this.classModsValues[1] < 0"class="negativo">-{{this.classModsValues[1]}}</span>
+            </ion-label>
+            <ion-label slot="end">
+              <span class="text">{{this.getAcronym(this.stats[2])}}</span>
+              <span *ngIf="this.classModsValues[2] >= 0" class="positivo">{{this.classModsValues[2]}}</span>
+              <span *ngIf="this.classModsValues[2] < 0"class="negativo">-{{this.classModsValues[2]}}</span>
+            </ion-label>
+          </ion-item>
+          <ion-item *ngIf="i == 8">
+            <ion-thumbnail slot="start">
+              <img src="https://www.bungie.net/common/destiny2_content/icons/d22aab3566d92ba0207544349d9651c9.png">
+            </ion-thumbnail>
+            <ion-label slot="end">
+              <span class="text">{{this.getAcronym(this.stats[0])}}</span>
+              <span class="text">{{this.getTotalFromStat(this.armors.length - 3, 0)}}</span>
+            </ion-label>
+            <ion-label slot="end">
+              <span class="text">{{this.getAcronym(this.stats[1])}}</span>
+              <span class="text">{{this.getTotalFromStat(this.armors.length - 3, 1)}}</span>
+            </ion-label>
+            <ion-label slot="end">
+              <span class="text">{{this.getAcronym(this.stats[2])}}</span>
+              <span class="text">{{this.getTotalFromStat(this.armors.length - 3, 2)}}</span>
+            </ion-label>
+          </ion-item>
+        </ion-col>
+        <ion-col [size]="this.getSize()">
+          <h4 *ngIf="i == 0">Farmear una pieza</h4>
+          <ion-item *ngIf="i < 4">
+            <ion-thumbnail slot="start">
+              <img src="{{this.getArmorById(this.armors[this.armors.length - 2], i).iconURL}}">
+            </ion-thumbnail>
+            <ion-label slot="end">
+              <span class="text">{{this.getAcronym(this.stats[0])}}</span>
+              <span class="text">{{this.getStatByName(this.getArmorById(this.armors[this.armors.length - 2], i), this.stats[0])}}</span>
+              <span class="masterwork"> (+2)</span>
+            </ion-label>
+            <ion-label slot="end">
+              <span class="text">{{this.getAcronym(this.stats[1])}}</span>
+              <span class="text">{{this.getStatByName(this.getArmorById(this.armors[this.armors.length - 2], i), this.stats[1])}}</span>
+              <span class="masterwork"> (+2)</span>
+            </ion-label>
+            <ion-label slot="end">
+              <span class="text">{{this.getAcronym(this.stats[2])}}</span>
+              <span class="text">{{this.getStatByName(this.getArmorById(this.armors[this.armors.length - 2], i), this.stats[2])}}</span>
+              <span class="masterwork"> (+2)</span>
+            </ion-label>
+          </ion-item>
+          <ion-item *ngIf="i == 4">
+            <ion-thumbnail slot="start">
+              <img src="https://www.bungie.net/common/destiny2_content/icons/1df0fc5001c4c2508a3cd29e50e033d5.jpg">
+            </ion-thumbnail>
+            <ion-label slot="end">
+              <span class="text">{{this.getAcronym(this.stats[0])}}</span>
+              <span class="masterwork">(+2)</span>
+            </ion-label>
+            <ion-label slot="end">
+              <span class="text">{{this.getAcronym(this.stats[1])}}</span>
+              <span class="masterwork">(+2)</span>
+            </ion-label>
+            <ion-label slot="end">
+              <span class="text">{{this.getAcronym(this.stats[2])}}</span>
+              <span class="masterwork">(+2)</span>
+            </ion-label>
+          </ion-item>
+          <ion-item *ngIf="i == 5">
+            <ion-thumbnail slot="start">
+              <img src="https://www.bungie.net/common/destiny2_content/icons/afc99a15bf6a435badc1110e81efcc2e.jpg">
+            </ion-thumbnail>
+            <ion-label slot="end">
+              <span class="text">{{this.getAcronym(this.stats[0])}}</span>
+              <span *ngIf="this.fragments[0] >= 0" class="positivo">+{{this.fragments[0]}}</span>
+              <span *ngIf="this.fragments[0] < 0"class="negativo">-{{this.fragments[0]}}</span>
+            </ion-label>
+            <ion-label slot="end">
+              <span class="text">{{this.getAcronym(this.stats[1])}}</span>
+              <span *ngIf="this.fragments[1] >= 0" class="positivo">+{{this.fragments[1]}}</span>
+              <span *ngIf="this.fragments[1] < 0"class="negativo">-{{this.fragments[1]}}</span>
+            </ion-label>
+            <ion-label slot="end">
+              <span class="text">{{this.getAcronym(this.stats[2])}}</span>
+              <span *ngIf="this.fragments[2] >= 0" class="positivo">+{{this.fragments[2]}}</span>
+              <span *ngIf="this.fragments[2] < 0"class="negativo">-{{this.fragments[2]}}</span>
+            </ion-label>
+          </ion-item>
+          <ion-item *ngIf="i == 6">
+            <ion-thumbnail slot="start">
+              <img src="https://www.bungie.net/common/destiny2_content/icons/195f4f173adb52b336b4ecd67101004d.png">
+            </ion-thumbnail>
+            <ion-label slot="end">
+              <span class="text">{{this.getAcronym(this.stats[0])}}</span>
+              <span class="positivo">{{this.getModQuantity(this.armors.length - 2, this.stats[0])}}</span>
+            </ion-label>
+            <ion-label slot="end">
+              <span class="text">{{this.getAcronym(this.stats[1])}}</span>
+              <span class="positivo">{{this.getModQuantity(this.armors.length - 2, this.stats[1])}}</span>
+            </ion-label>
+            <ion-label slot="end">
+              <span class="text">{{this.getAcronym(this.stats[2])}}</span>
+              <span class="positivo">{{this.getModQuantity(this.armors.length - 2, this.stats[2])}}</span>
+            </ion-label>
+          </ion-item>
+          <ion-item *ngIf="i == 7">
+            <ion-thumbnail slot="start">
+              <img src="https://www.bungie.net/common/destiny2_content/icons/a8acc2b6cf36527f879051a38622e310.png">
+            </ion-thumbnail>
+            <ion-label slot="end">
+              <span class="text">{{this.getAcronym(this.stats[0])}}</span>
+              <span *ngIf="this.classModsValues[0] >= 0" class="positivo">{{this.classModsValues[0]}}</span>
+              <span *ngIf="this.classModsValues[0] < 0"class="negativo">-{{this.classModsValues[0]}}</span>
+            </ion-label>
+            <ion-label slot="end">
+              <span class="text">{{this.getAcronym(this.stats[1])}}</span>
+              <span *ngIf="this.classModsValues[1] >= 0" class="positivo">{{this.classModsValues[1]}}</span>
+              <span *ngIf="this.classModsValues[1] < 0"class="negativo">-{{this.classModsValues[1]}}</span>
+            </ion-label>
+            <ion-label slot="end">
+              <span class="text">{{this.getAcronym(this.stats[2])}}</span>
+              <span *ngIf="this.classModsValues[2] >= 0" class="positivo">{{this.classModsValues[2]}}</span>
+              <span *ngIf="this.classModsValues[2] < 0"class="negativo">-{{this.classModsValues[2]}}</span>
+            </ion-label>
+          </ion-item>
+          <ion-item *ngIf="i == 8">
+            <ion-thumbnail slot="start">
+              <img src="https://www.bungie.net/common/destiny2_content/icons/d22aab3566d92ba0207544349d9651c9.png">
+            </ion-thumbnail>
+            <ion-label slot="end">
+              <span class="text">{{this.getAcronym(this.stats[0])}}</span>
+              <span class="text">{{this.getTotalFromStat(this.armors.length - 2, 0)}}</span>
+            </ion-label>
+            <ion-label slot="end">
+              <span class="text">{{this.getAcronym(this.stats[1])}}</span>
+              <span class="text">{{this.getTotalFromStat(this.armors.length - 2, 1)}}</span>
+            </ion-label>
+            <ion-label slot="end">
+              <span class="text">{{this.getAcronym(this.stats[2])}}</span>
+              <span class="text">{{this.getTotalFromStat(this.armors.length - 2, 2)}}</span>
+            </ion-label>
+          </ion-item>
+        </ion-col>
+        <ion-col [size]="this.getSize()">
+          <h4 *ngIf="i == 0">Equipable ahora</h4>
+          <ion-item *ngIf="i < 4">
+            <ion-thumbnail slot="start">
+              <img src="{{this.getArmorById(this.armors[this.armors.length - 1], i).iconURL}}">
+            </ion-thumbnail>
+            <ion-label slot="end">
+              <span class="text">{{this.getAcronym(this.stats[0])}}</span>
+              <span class="text">{{this.getStatByName(this.getArmorById(this.armors[this.armors.length - 1], i), this.stats[0])}}</span>
+              <span class="masterwork"> (+2)</span>
+            </ion-label>
+            <ion-label slot="end">
+              <span class="text">{{this.getAcronym(this.stats[1])}}</span>
+              <span class="text">{{this.getStatByName(this.getArmorById(this.armors[this.armors.length - 1], i), this.stats[1])}}</span>
+              <span class="masterwork"> (+2)</span>
+            </ion-label>
+            <ion-label slot="end">
+              <span class="text">{{this.getAcronym(this.stats[2])}}</span>
+              <span class="text">{{this.getStatByName(this.getArmorById(this.armors[this.armors.length - 1], i), this.stats[2])}}</span>
+              <span class="masterwork"> (+2)</span>
+            </ion-label>
+          </ion-item>
+          <ion-item *ngIf="i == 4">
+            <ion-thumbnail slot="start">
+              <img src="https://www.bungie.net/common/destiny2_content/icons/1df0fc5001c4c2508a3cd29e50e033d5.jpg">
+            </ion-thumbnail>
+            <ion-label slot="end">
+              <span class="text">{{this.getAcronym(this.stats[0])}}</span>
+              <span class="masterwork">(+2)</span>
+            </ion-label>
+            <ion-label slot="end">
+              <span class="text">{{this.getAcronym(this.stats[1])}}</span>
+              <span class="masterwork">(+2)</span>
+            </ion-label>
+            <ion-label slot="end">
+              <span class="text">{{this.getAcronym(this.stats[2])}}</span>
+              <span class="masterwork">(+2)</span>
+            </ion-label>
+          </ion-item>
+          <ion-item *ngIf="i == 5">
+            <ion-thumbnail slot="start">
+              <img src="https://www.bungie.net/common/destiny2_content/icons/afc99a15bf6a435badc1110e81efcc2e.jpg">
+            </ion-thumbnail>
+            <ion-label slot="end">
+              <span class="text">{{this.getAcronym(this.stats[0])}}</span>
+              <span *ngIf="this.fragments[0] >= 0" class="positivo">+{{this.fragments[0]}}</span>
+              <span *ngIf="this.fragments[0] < 0"class="negativo">-{{this.fragments[0]}}</span>
+            </ion-label>
+            <ion-label slot="end">
+              <span class="text">{{this.getAcronym(this.stats[1])}}</span>
+              <span *ngIf="this.fragments[1] >= 0" class="positivo">+{{this.fragments[1]}}</span>
+              <span *ngIf="this.fragments[1] < 0"class="negativo">-{{this.fragments[1]}}</span>
+            </ion-label>
+            <ion-label slot="end">
+              <span class="text">{{this.getAcronym(this.stats[2])}}</span>
+              <span *ngIf="this.fragments[2] >= 0" class="positivo">+{{this.fragments[2]}}</span>
+              <span *ngIf="this.fragments[2] < 0"class="negativo">-{{this.fragments[2]}}</span>
+            </ion-label>
+          </ion-item>
+          <ion-item *ngIf="i == 6">
+            <ion-thumbnail slot="start">
+              <img src="https://www.bungie.net/common/destiny2_content/icons/195f4f173adb52b336b4ecd67101004d.png">
+            </ion-thumbnail>
+            <ion-label slot="end">
+              <span class="text">{{this.getAcronym(this.stats[0])}}</span>
+              <span class="positivo">{{this.getModQuantity(this.armors.length - 1, this.stats[0])}}</span>
+            </ion-label>
+            <ion-label slot="end">
+              <span class="text">{{this.getAcronym(this.stats[1])}}</span>
+              <span class="positivo">{{this.getModQuantity(this.armors.length - 1, this.stats[1])}}</span>
+            </ion-label>
+            <ion-label slot="end">
+              <span class="text">{{this.getAcronym(this.stats[2])}}</span>
+              <span class="positivo">{{this.getModQuantity(this.armors.length - 1, this.stats[2])}}</span>
+            </ion-label>
+          </ion-item>
+          <ion-item *ngIf="i == 7">
+            <ion-thumbnail slot="start">
+              <img src="https://www.bungie.net/common/destiny2_content/icons/a8acc2b6cf36527f879051a38622e310.png">
+            </ion-thumbnail>
+            <ion-label slot="end">
+              <span class="text">{{this.getAcronym(this.stats[0])}}</span>
+              <span *ngIf="this.classModsValues[0] >= 0" class="positivo">{{this.classModsValues[0]}}</span>
+              <span *ngIf="this.classModsValues[0] < 0"class="negativo">-{{this.classModsValues[0]}}</span>
+            </ion-label>
+            <ion-label slot="end">
+              <span class="text">{{this.getAcronym(this.stats[1])}}</span>
+              <span *ngIf="this.classModsValues[1] >= 0" class="positivo">{{this.classModsValues[1]}}</span>
+              <span *ngIf="this.classModsValues[1] < 0"class="negativo">-{{this.classModsValues[1]}}</span>
+            </ion-label>
+            <ion-label slot="end">
+              <span class="text">{{this.getAcronym(this.stats[2])}}</span>
+              <span *ngIf="this.classModsValues[2] >= 0" class="positivo">{{this.classModsValues[2]}}</span>
+              <span *ngIf="this.classModsValues[2] < 0"class="negativo">-{{this.classModsValues[2]}}</span>
+            </ion-label>
+          </ion-item>
+          <ion-item *ngIf="i == 8">
+            <ion-thumbnail slot="start">
+              <img src="https://www.bungie.net/common/destiny2_content/icons/d22aab3566d92ba0207544349d9651c9.png">
+            </ion-thumbnail>
+            <ion-label slot="end">
+              <span class="text">{{this.getAcronym(this.stats[0])}}</span>
+              <span class="text">{{this.getTotalFromStat(this.armors.length - 1, 0)}}</span>
+            </ion-label>
+            <ion-label slot="end">
+              <span class="text">{{this.getAcronym(this.stats[1])}}</span>
+              <span class="text">{{this.getTotalFromStat(this.armors.length - 1, 1)}}</span>
+            </ion-label>
+            <ion-label slot="end">
+              <span class="text">{{this.getAcronym(this.stats[2])}}</span>
+              <span class="text">{{this.getTotalFromStat(this.armors.length - 1, 2)}}</span>
+            </ion-label>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </div>
 </ion-content>

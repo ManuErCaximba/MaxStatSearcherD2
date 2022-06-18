@@ -2,6 +2,7 @@ import { Component, OnInit, Output } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NavController } from '@ionic/angular';
+import { DataService } from 'src/app/data-management/data.service';
 import { LocalStorageService } from 'src/app/data-management/local-storage.service';
 import { RestService } from 'src/app/data-management/rest.service';
 
@@ -48,7 +49,8 @@ export class BuildSearcherPage implements OnInit {
     private localService: LocalStorageService,
     private restService: RestService,
     private opService: OpService,
-    private router: Router) { }
+    private router: Router,
+    private dataService: DataService) { }
 
   async ngOnInit() {
     this.statForm = new FormGroup({
@@ -57,9 +59,9 @@ export class BuildSearcherPage implements OnInit {
       stat2: new FormControl(''),
       stat3: new FormControl(''),
       mods: new FormControl([]),
-      aspect1: new FormControl(''),
-      aspect2: new FormControl(''),
-      aspect3: new FormControl(''),
+      fragment1: new FormControl(''),
+      fragment2: new FormControl(''),
+      fragment3: new FormControl(''),
       exotic: new FormControl('')
     })
 
@@ -121,7 +123,7 @@ export class BuildSearcherPage implements OnInit {
             id,
             itemHash,
             name,
-            iconUrl,
+            'https://www.bungie.net' + iconUrl,
             baseStats[0],
             baseStats[1],
             baseStats[2],
@@ -153,8 +155,8 @@ export class BuildSearcherPage implements OnInit {
   }
 
   public onSubmit() {
-    let results = this.opService.calc(this.statForm, this.armorsList);
-    this.router.navigate(['/result', { results: results}]);
+    this.dataService.setData(1, this.opService.calc(this.statForm, this.armorsList));
+    this.router.navigate(['/result']);
   }
 
   public getExoticsFromClass() {
@@ -164,9 +166,9 @@ export class BuildSearcherPage implements OnInit {
         res.push(this.armorsList[i]);
       }
     }
-    res.sort((a,b) => {
-      if(a.name < b.name) { return -1; }
-      if(a.name > b.name) { return 1; }
+    res.sort((a, b) => {
+      if (a.name < b.name) { return -1; }
+      if (a.name > b.name) { return 1; }
       return 0;
     });
     return res;

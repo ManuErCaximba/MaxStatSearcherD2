@@ -4,17 +4,17 @@ export class ArmorDTO {
 
     public id: string;
     public hash: string;
-  
+
     public name: string;
     public iconURL: string;
-  
+
     public mobility: number;
     public resilience: number;
     public recovery: number;
     public discipline: number;
     public intellect: number;
     public strength: number;
-  
+
     public armorType: ArmorType;
     public classType: ClassType;
     public isExotic: boolean;
@@ -37,7 +37,7 @@ export class ArmorDTO {
         this.id = id;
         this.hash = hash;
         this.name = name;
-        this.iconURL = 'https://www.bungie.net' + iconURL;
+        this.iconURL = iconURL;
         this.mobility = mobility;
         this.resilience = resilience;
         this.recovery = recovery;
@@ -80,5 +80,21 @@ export class ArmorDTO {
                 return this.strength;
         }
     }
+
+    public setStatByName(value: number, name: string) {
+        switch (name) {
+            case 'MOVILIDAD':
+                this.mobility = value;
+            case 'RESISTENCIA':
+                this.resilience = value;
+            case 'RECUPERACION':
+                this.recovery = value;
+            case 'DISCIPLINA':
+                this.discipline = value;
+            case 'INTELECTO':
+                this.intellect = value;
+            case 'FUERZA':
+                this.strength = value;
+        }
+    }
 }
-  
