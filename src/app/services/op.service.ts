@@ -147,37 +147,35 @@ export class OpService {
 
   public getValueFromMods(mods, clss, stats) {
     let result = [0, 0, 0];
-    mods.forEach(mod => {
-      switch (mod) {
-        case 'COSECHADORA DE CARGA':
-          switch (clss) {
-            case 'TITAN':
-              result[stats.indexOf('RESISTENCIA')] -= 10;
-            case 'CAZADOR':
-              result[stats.indexOf('MOVILIDAD')] -= 10;
-            case 'HECHICERO':
-              result[stats.indexOf('RECUPERACION')] -= 10;
-          }
-        case 'CONVERSOR DE ENERGIA':
-          result[stats.indexOf('DISCIPLINA')] -= 10;
-        case 'RESERVAS EXTRA':
-          result[stats.indexOf('INTELECTO')] -= 10;
-        case 'AMISTADES PODEROSAS':
-          result[stats.indexOf('MOVILIDAD')] += 20;
-        case 'CARGA CON PRECISION':
-          result[stats.indexOf('DISCIPLINA')] -= 10;
-        case 'CARGA DE PRECISION':
-          result[stats.indexOf('FUERZA')] -= 10;
-        case 'LUZ PROTECTORA':
-          result[stats.indexOf('FUERZA')] -= 10;
-        case 'LUZ RADIANTE':
-          result[stats.indexOf('FUERZA')] += 20;
-        case 'CARGA Y RECARGA':
-          result[stats.indexOf('RECUPERACION')] -= 10;
-        case 'ATAQUE SORPRESA':
-          result[stats.indexOf('INTELECTO')] -= 10;
+    stats.forEach(stat => {
+      let i = stats.indexOf(stat);
+      switch (stat) {
+        case "MOVILIDAD":
+          result[i] = mods.indexOf("COSECHADORA DE CARGA") >= 0 && (clss == 1 || clss == "CAZADOR") ? result[i] - 10 : result[i];
+          result[i] = mods.indexOf("AMISTADES PODEROSAS") >= 0 ? result[i] + 20 : result[i];
+          break;
+        case "RESISTENCIA":
+          result[i] = mods.indexOf("COSECHADORA DE CARGA") >= 0 && (clss == 0 || clss == "TITAN") ? result[i] - 10 : result[i];
+          break;
+        case "RECUPERACION":
+          result[i] = mods.indexOf("COSECHADORA DE CARGA") >= 0 && (clss == 2 || clss == "HECHICERO") ? result[i] - 10 : result[i];
+          result[i] = mods.indexOf("CARGA Y RECARGA") >= 0 ? result[i] - 10 : result[i];
+          break;
+        case "DISCIPLINA":
+          result[i] = mods.indexOf("CONVERSOR DE ENERGIA") >= 0 ? result[i] - 10 : result[i];
+          result[i] = mods.indexOf("CARGA CON PRECISION") >= 0 ? result[i] - 10 : result[i];
+          break;
+        case "INTELECTO":
+          result[i] = mods.indexOf("RESERVAS EXTRA") >= 0 ? result[i] - 10 : result[i];
+          result[i] = mods.indexOf("ATAQUE SORPRESA") >= 0 ? result[i] - 10 : result[i];
+          break;
+        case "FUERZA":
+          result[i] = mods.indexOf("CARGA DE PRECISION") >= 0 ? result[i] - 10 : result[i];
+          result[i] = mods.indexOf("LUZ PROTECTORA") >= 0 ? result[i] - 10 : result[i];
+          result[i] = mods.indexOf("LUZ RADIANTE") >= 0 ? result[i] + 20 : result[i];
+          break;
       }
-    })
+    });
     return result;
   }
 }

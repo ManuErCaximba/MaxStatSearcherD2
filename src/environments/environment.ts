@@ -4,9 +4,9 @@
 
 export const environment = {
   production: false,
-  API_KEY: '17c125d33fc94ebabba5337d489e5dd0',
-  CLIENT_ID: '40559',
-  CLIENT_SECRET: 'sQc1EZ1dpdbCePbWAsBeOyz1JcyArZGfFfYEaA1O-CM'
+  API_KEY: '8af17939945f4178a69a259051ebb727',
+  CLIENT_ID: '40649',
+  CLIENT_SECRET: '5Kj0T2g0JTi8qpp-d5uKvWMkCKy-rLDlwkaj4-oE-b8'
 };
 
 /*

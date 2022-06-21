@@ -68,8 +68,8 @@ export class ResultPage implements OnInit {
     this.stats = data[0][6];
     this.values = [data[0][0], data[1][0], data[2][0], data[3][0]];
 
-    let clss = data[0][5].classType;
-    this.classModsValues = this.opService.getValueFromMods(this.mods, clss, this.stats);
+    let clss = data[0][5][0].classType;
+    this.classModsValues = this.opService.getValueFromMods(this.classMods, clss, this.stats);
 
     this.armors = [];
     this.container = this.exotic === undefined ? "" : "container";

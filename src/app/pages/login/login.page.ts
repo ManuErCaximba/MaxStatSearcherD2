@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LocalStorageService } from 'src/app/data-management/local-storage.service';
 import { RestService } from 'src/app/data-management/rest.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-login',
@@ -11,7 +12,7 @@ import { RestService } from 'src/app/data-management/rest.service';
 })
 export class LoginPage implements OnInit {
   public href: string =
-    'https://www.bungie.net/en/OAuth/Authorize?client_id=40559&response_type=code';
+    'https://www.bungie.net/en/OAuth/Authorize?client_id=' + environment.CLIENT_ID + '&response_type=code';
   public code: any;
   public bungieName: string;
   public local: any;
@@ -23,7 +24,7 @@ export class LoginPage implements OnInit {
     private router: Router,
     private localService: LocalStorageService,
     private restService: RestService
-  ) {}
+  ) { }
 
   public ngOnInit() {
     let authCode = this.response.snapshot.queryParams['code'];
