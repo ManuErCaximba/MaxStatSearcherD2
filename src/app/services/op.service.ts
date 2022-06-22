@@ -117,6 +117,7 @@ export class OpService {
         sum[2] += a.getStatByName(stat3);
       })
       let mods = this.getMods(sum, [stat1, stat2, stat3]);
+      // Implementar aqui el calculo de armaduras
       let fragments = [fragment1, fragment2, fragment3];
       let stats = [stat1, stat2, stat3];
       results.push([sum, exotic, mods, classMods, fragments, comb, stats])
