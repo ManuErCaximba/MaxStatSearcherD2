@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { ArmorDTO } from '../model/armorDTO';
+import { ArmorType } from '../model/enums';
 
 @Injectable({
   providedIn: 'root'
@@ -15,10 +16,12 @@ export class OpService {
     let stat1 = statForm.get('stat1').value;
     let stat2 = statForm.get('stat2').value;
     let stat3 = statForm.get('stat3').value;
+    let stats = [stat1, stat2, stat3];
     let classMods = statForm.get('mods').value;
     let fragment1 = statForm.get('fragment1').value == '' ? 0 : statForm.get('fragment1').value;
     let fragment2 = statForm.get('fragment2').value == '' ? 0 : statForm.get('fragment2').value;
     let fragment3 = statForm.get('fragment3').value == '' ? 0 : statForm.get('fragment3').value;
+    let fragments = [fragment1, fragment2, fragment3];
     let exotic = statForm.get('exotic').value;
 
     // Setting result values
@@ -107,7 +110,7 @@ export class OpService {
     }
 
     let results = []
-    let combList: ArmorDTO[][] = [one, two, three, four];
+    let combList: ArmorDTO[][] = exotic === undefined ? [one, two, three, four] : [one, two, three];
 
     combList.forEach(comb => {
       let sum = [defStat1, defStat2, defStat3];
@@ -117,12 +120,81 @@ export class OpService {
         sum[2] += a.getStatByName(stat3);
       })
       let mods = this.getMods(sum, [stat1, stat2, stat3]);
-      // Implementar aqui el calculo de armaduras
-      let fragments = [fragment1, fragment2, fragment3];
-      let stats = [stat1, stat2, stat3];
+      let dummyStats = [
+        Math.ceil((100 - sum[0]) / (3 - comb.length)),
+        Math.ceil((100 - sum[1]) / (3 - comb.length)),
+        Math.ceil((100 - sum[2]) / (3 - comb.length)),
+      ]
+
+      this.delimitStats(dummyStats, stats);
+      let armorsTypes = [exotic.armorType];
+      comb.forEach(c => {
+        armorsTypes.push(c.armorType);
+      })
+      let size = comb.length;
+      for (let i = 0; i < 3 - size; i++) {
+        let type = this.getArmorType(armorsTypes);
+        let icon = this.getDummyIcon(type);
+        let dummyArmor = new ArmorDTO(
+          null,
+          null,
+          'Farmear',
+          icon,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          type,
+          comb[0].classType,
+          false
+        )
+        dummyArmor.setStatByName(dummyStats[0], stat1);
+        dummyArmor.setStatByName(dummyStats[1], stat2);
+        dummyArmor.setStatByName(dummyStats[2], stat3);
+        comb.push(dummyArmor);
+      }
+      exotic === undefined ? comb : comb.push(exotic);
       results.push([sum, exotic, mods, classMods, fragments, comb, stats])
     })
     return results;
+  }
+
+  private delimitStats(dummyStats, stats) {
+    let primaries = ['MOVILIDAD', 'RESISTENCIA', 'RECUPERACION'];
+    let primariesStat = [
+      primaries.indexOf(stats[0]) >= 0 ? true : false,
+      primaries.indexOf(stats[1]) >= 0 ? true : false,
+      primaries.indexOf(stats[2]) >= 0 ? true : false
+    ]
+    let pCount = primariesStat.filter(x => x).length;
+    let pSum = 0;
+    let sSum = 0;
+    for (let i = 0; i < primariesStat.length; i++) {
+      if (primariesStat[i]) {
+        pSum += dummyStats[i];
+      } else {
+        sSum += dummyStats[i];
+      }
+    }
+    let pOverflow = false;
+    let sOverflow = false;
+    if (pSum > 34) {
+      pSum = (34 / pCount);
+      pOverflow = true;
+    }
+    if (sSum > 34) {
+      sSum = (34 / (3 - pCount));
+      sOverflow = true;
+    }
+    for (let i = 0; i < primariesStat.length; i++) {
+      if (primariesStat[i] && pOverflow) {
+        dummyStats[i] = pSum;
+      } else if (!primariesStat[i] && sOverflow) {
+        dummyStats[i] = sSum;
+      }
+    }
   }
 
   private getMods(values: number[], stats: string[]) {
@@ -144,6 +216,25 @@ export class OpService {
       }
     })
     return res;
+  }
+
+  private getArmorType(armorsType) {
+    if (armorsType.indexOf('HELMET') < 0) {
+      armorsType.push('HELMET');
+      return ArmorType.HELMET;
+    }
+    if (armorsType.indexOf('GAUNTLETS') < 0) {
+      armorsType.push('GAUNTLETS');
+      return ArmorType.GAUNTLETS;
+    }
+    if (armorsType.indexOf('CHEST') < 0) {
+      armorsType.push('CHEST');
+      return ArmorType.CHEST;
+    }
+    if (armorsType.indexOf('LEGS') < 0) {
+      armorsType.push('LEGS');
+      return ArmorType.LEGS;
+    }
   }
 
   public getValueFromMods(mods, clss, stats) {
@@ -178,5 +269,18 @@ export class OpService {
       }
     });
     return result;
+  }
+
+  private getDummyIcon(type) {
+    switch (type) {
+      case 'HELMET':
+        return 'https://www.bungie.net/common/destiny2_content/icons/9105d456d5e4633a1de3d01f6559025c.jpg';
+      case 'GAUNTLETS':
+        return 'https://www.bungie.net/common/destiny2_content/icons/daa79bf8275b7bae1c9be02fd844c141.jpg';
+      case 'CHEST':
+        return 'https://www.bungie.net/common/destiny2_content/icons/6a2477fd9a3c6397fd2743e6e304d53e.jpg';
+      case 'LEGS':
+        return 'https://www.bungie.net/common/destiny2_content/icons/1f4dd88e866e88f70e06fc63adf23151.jpg';
+    }
   }
 }

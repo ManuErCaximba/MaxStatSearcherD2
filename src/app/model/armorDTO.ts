@@ -85,16 +85,22 @@ export class ArmorDTO {
         switch (name) {
             case 'MOVILIDAD':
                 this.mobility = value;
+                break;
             case 'RESISTENCIA':
                 this.resilience = value;
+                break;
             case 'RECUPERACION':
                 this.recovery = value;
+                break;
             case 'DISCIPLINA':
                 this.discipline = value;
+                break;
             case 'INTELECTO':
                 this.intellect = value;
+                break;
             case 'FUERZA':
                 this.strength = value;
+                break;
         }
     }
 }
