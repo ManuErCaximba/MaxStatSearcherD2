@@ -1,102 +1,14 @@
-
-* {
-    -webkit-tap-highlight-color: transparent;
-    box-sizing: border-box;
-}
-user agent stylesheet
-head {
-    display: none;
-}
-style {
-    --scrollbar-track: #afafaf;
-    --scrollbar-draggy: #cacaca;
-    --body-background: #97989b;
-}
-:root {
-    --sat: env(safe-area-inset-top);
-    --sar: env(safe-area-inset-right);
-    --sab: env(safe-area-inset-bottom);
-    --sal: env(safe-area-inset-left);
-    --font-display: "Neue Haas Grotesk Display","Destiny Symbols","Segoe-MDL",sans-serif,"Apple Color Emoji","Segoe UI Emoji","NotoColorEmoji","Segoe UI Symbol","Android Emoji","EmojiSymbols";
-    --font-text: "Neue Haas Grotesk Text","Destiny Symbols","Segoe-MDL",sans-serif,"Apple Color Emoji","Segoe UI Emoji","NotoColorEmoji","Segoe UI Symbol","Android Emoji","EmojiSymbols";
-    --font-serif: "Cromwell","Destiny Symbols","Segoe-MDL",serif,"Apple Color Emoji","Segoe UI Emoji","NotoColorEmoji","Segoe UI Symbol","Android Emoji","EmojiSymbols";
-    --body-background: #97989b;
-}
-html {
-    --energy-solar: #f1631d;
-    --energy-arc: #6de8f1;
-    --energy-void: #a777c5;
-    --energy-stasis: #427cff;
-    --ammo-primary: #fff;
-    --ammo-special: #7af48b;
-    --ammo-heavy: #b286ff;
-    --light: #e5d163;
-    --braytech: #e3315b;
-    --tier-exotic: 48,61%,50%;
-    --tier-legendary: 279,36%,29%;
-    --tier-rare: 213,34%,48%;
-    --tier-uncommon: 126,35%,32%;
-    --tier-common: 32,11%,74%;
-    --tier-exotic-dark: 48,71%,5%;
-    --tier-legendary-dark: 279,36%,5%;
-    --tier-rare-dark: 213,34%,6%;
-    --tier-uncommon-dark: 126,35%,5%;
-    --tier-common-dark: 32,11%,74%;
-    --progress: #5aa366;
-    --error: #dc513b;
-    --warning: #f3d95c;
-    --success: #2f99ac;
-    --experience: #20b4b6;
-    --bungie-blue: #58ccff;
-    --stat-masterwork: #cdae32;
-    --perk-blue: #5b94be;
-    --stat-add: #70b36b;
-    --stat-subtract: #b34d4d;
-    --stat-add-mod: #e1ce84;
-    --deepsight: #d2523a;
-    --item-max-stack: #7d7035;
-    --ui-scale: var(--ui-scale-1);
-    --ui-scale-1: 1.017;
-    --ui-scale-2: 1.05;
-    --ui-scale-3: 1.004,1.1;
-    --titlebar-height: env(titlebar-area-height,40px);
-    --header-height: calc(112px + var(--titlebar-height));
-    --header-offset: calc(env(safe-area-inset-top)*0.8);
-    --view-height: calc(100vh - var(--header-height));
-    --frame-height-with-header: calc(100vh - 224px);
-    --platform-xbox: #4caf50;
-    --platform-playstation: #3f51b5;
-    --platform-steam: #165b83;
-    --platform-blizzard: #009ae4;
-    --platform-stadia: #da2b48;
-    --class-titan: #893238;
-    --class-hunter: #5c828b;
-    --class-warlock: #b68f28;
-    --sockets-grid: url(data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='30' height='30'%3E%3Cpath style='fill:%23fff;opacity:.03' d='M21.747 19.5H30V21h-8.253zM19.494 21.746h1.5V30h-1.5z'/%3E%3Cpath style='fill:%23fff;opacity:.15' d='M21.001 21v-1.5h-1.507V21h1.507z'/%3E%3Cpath style='fill:%23fff;opacity:.03' d='M19.494 0h1.5v3.752h-1.5zM21.747 4.498H30v1.5h-8.253zM19.494 6.744h1.5v12.01h-1.5zM6.748 4.5H18.75V6H6.748zM4.494 0h1.5v3.754h-1.5zM0 4.5h3.749V6H0z'/%3E%3Cpath style='fill:%23fff;opacity:.15' d='M5.994 4.5h-1.5V6h1.508V4.5h-.008zM20.99 4.5h-1.5V6h1.508V4.5h-.008z'/%3E%3Cpath style='fill:%23fff;opacity:.03' d='M6.738 19.5h12.01V21H6.738zM4.494 6.746h1.5v12.009h-1.5zM0 19.5h3.749V21H0z'/%3E%3Cpath style='fill:%23fff;opacity:.15' d='M4.494 19.5h1.499V21H4.494z'/%3E%3Cpath style='fill:%23fff;opacity:.03' d='M4.494 21.746h1.5V30h-1.5z'/%3E%3C/svg%3E);
-}
-a, abbr, acronym, address, applet, article, aside, audio, b, big, blockquote, body, canvas, caption, center, cite, code, dd, del, details, dfn, div, dl, dt, em, embed, fieldset, figcaption, figure, footer, form, h1, h2, h3, h4, h5, h6, header, hgroup, hr, html, i, iframe, img, ins, kbd, label, legend, li, mark, menu, nav, object, ol, output, p, pre, q, ruby, s, samp, section, small, span, strike, strong, sub, summary, sup, table, tbody, td, tfoot, th, thead, time, tr, tt, u, ul, var, video {
-    border: 0;
-    font-size: 100%;
-    font: inherit;
-    margin: 0;
-    padding: 0;
-    vertical-align: initial;
+.background {
+    background-image: url("../../../assets/bgs/destiny-2-the-witch-queen-postcard_3840x2160_xtrafondos.com.jpg");
+    background-attachment: fixed;
+    background-size: cover;
+    background-position: center;
 }
 
-::-webkit-scrollbar {
-    width: 12px;
-}
-
-::-webkit-scrollbar-thumb {
-    background: var(--scrollbar-draggy);
-    border-radius: 0;
-}
-
-::-webkit-scrollbar-track {
-    background-color: var(--scrollbar-track);
-    border-radius: 0;
-}
-::selection {
-    background: #000;
-    color: #fff;
+.rectangle {
+    position: absolute;
+    height: 40%;
+    width: 100%;
+    bottom: 0;
+    background-color: rgb(41, 41, 41);
 }
