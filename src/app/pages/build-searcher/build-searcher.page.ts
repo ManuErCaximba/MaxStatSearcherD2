@@ -1,15 +1,12 @@
-import { Component, OnInit, Output } from '@angular/core';
-import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
-import { NavController } from '@ionic/angular';
 import { DataService } from 'src/app/data-management/data.service';
-import { LocalStorageService } from 'src/app/data-management/local-storage.service';
 import { RestService } from 'src/app/data-management/rest.service';
 
 import { ArmorDTO } from 'src/app/model/armorDTO';
 import { ArmorType } from 'src/app/model/enums';
 import { OpService } from 'src/app/services/op.service';
-import { ResultPage } from '../result/result.page';
 
 @Component({
   selector: 'app-build-searcher',
@@ -19,9 +16,7 @@ import { ResultPage } from '../result/result.page';
 export class BuildSearcherPage implements OnInit {
 
   //Init vars
-  public authToken: string;
   public armorsList = [];
-  public userClasses: any = [];
 
   //Form vars
   public indexes: number[] = [0, 1, 2];
@@ -46,13 +41,12 @@ export class BuildSearcherPage implements OnInit {
   public statForm: FormGroup;
 
   constructor(
-    private localService: LocalStorageService,
     private restService: RestService,
     private opService: OpService,
     private router: Router,
     private dataService: DataService) { }
 
-  async ngOnInit() {
+  public async ngOnInit() {
     this.statForm = new FormGroup({
       class: new FormControl(''),
       stat1: new FormControl(''),
@@ -64,8 +58,6 @@ export class BuildSearcherPage implements OnInit {
       fragment3: new FormControl(''),
       exotic: new FormControl('')
     })
-
-    this.authToken = this.localService.getData('mssd2-auth-token');
 
     let currentUser = await this.restService.getCurrentUser().toPromise();
     let membershipType = currentUser['Response'].destinyMemberships[0].membershipType;

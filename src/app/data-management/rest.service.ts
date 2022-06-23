@@ -11,8 +11,6 @@ import { environment } from 'src/environments/environment';
 })
 export class RestService {
 
-  private authToken = this.localService.getData('mssd2-auth-token') 
-
   constructor(
     private httpClient: HttpClient,
     private localService: LocalStorageService,
@@ -30,7 +28,7 @@ export class RestService {
 
   private getManifest() {
     const headers = new HttpHeaders()
-    .set('Authorization', 'Bearer ' + this.authToken)
+    .set('Authorization', 'Bearer ' + this.localService.getData('mssd2-auth-token'))
     .set('X-API-key', environment.API_KEY);
     return this.httpClient
       .get(
@@ -41,7 +39,7 @@ export class RestService {
 
   public getItem(membershipType: string, membershipId: string, itemId: string) {
     const headers = new HttpHeaders()
-    .set('Authorization', 'Bearer ' + this.authToken)
+    .set('Authorization', 'Bearer ' + this.localService.getData('mssd2-auth-token'))
     .set('X-API-key', environment.API_KEY);
     return this.httpClient
       .get(
@@ -52,7 +50,7 @@ export class RestService {
 
   public getProfile(membershipType: string, membershipId: string) {
     const headers = new HttpHeaders()
-    .set('Authorization', 'Bearer ' + this.authToken)
+    .set('Authorization', 'Bearer ' + this.localService.getData('mssd2-auth-token'))
     .set('X-API-key', environment.API_KEY);
     return this.httpClient
       .get(
@@ -63,7 +61,7 @@ export class RestService {
 
   public getCurrentUser(): Observable<any> {
     const headers = new HttpHeaders()
-    .set('Authorization', 'Bearer ' + this.authToken)
+    .set('Authorization', 'Bearer ' + this.localService.getData('mssd2-auth-token'))
     .set('X-API-key', environment.API_KEY);
     return this.httpClient
       .get(
@@ -107,7 +105,7 @@ export class RestService {
 
   public getNicknameTest(): Observable<any> {
     const authHeader = new HttpHeaders()
-      .set('Authorization', 'Bearer ' + this.authToken)
+      .set('Authorization', 'Bearer ' + this.localService.getData('mssd2-auth-token'))
       .set('X-API-key', environment.API_KEY);
     return this.httpClient
       .get(
