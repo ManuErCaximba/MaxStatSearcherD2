@@ -37,6 +37,8 @@ export class ErrorHandlerInterceptor implements HttpInterceptor {
                   this.navCtrl.navigateForward('/build-searcher')
                 },
                 (err) => {
+                  this.localService.removeData('mssd2-auth-token');
+                  this.localService.removeData('mssd2-refresh-token');
                   this.navCtrl.navigateForward('/login')
                 }
               );
