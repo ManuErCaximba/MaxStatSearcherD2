@@ -10,13 +10,13 @@ import { LocalStorageService } from '../data-management/local-storage.service';
 @Injectable({
   providedIn: 'root'
 })
-export class ErrorHandlerInterceptor implements HttpInterceptor{
+export class ErrorHandlerInterceptor implements HttpInterceptor {
 
   constructor(
     private restService: RestService,
     private navCtrl: NavController,
     private localService: LocalStorageService
-  ) {}
+  ) { }
 
   intercept(
     req: HttpRequest<any>,
@@ -29,7 +29,7 @@ export class ErrorHandlerInterceptor implements HttpInterceptor{
         },
         (err) => {
           if (err instanceof HttpErrorResponse) {
-            if (err.status == 401 || err.status == 400) {
+            if (err.status == 401 || err.status == 400 || err.status == 500) {
               this.restService.getRefreshToken().subscribe(
                 (data) => {
                   this.localService.saveData('mssd2-auth-token', data['access_token']);
