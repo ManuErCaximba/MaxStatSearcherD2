@@ -1,5 +1,5 @@
 # MaxStatSearcherD2
-Little application that aims in try to get optimized stats build for armors from the game Destiny 2
+Little application to get optimized stats build for armors from the game Destiny 2
 ## v0.1.0
 * Initial beta release
 ## v0.1.1
